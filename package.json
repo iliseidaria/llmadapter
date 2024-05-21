@@ -1,0 +1,23 @@
+{
+  "name": "llmos",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "server": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AssistOS-AI/LLMOS.git"
+  },
+  "author": "Axiologic Research",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AssistOS-AI/LLMOS/issues"
+  },
+  "homepage": "https://github.com/AssistOS-AI/LLMOS#readme",
+  "dependencies": {
+    "embedJs": "git+https://github.com/AssistOS-AI/embedJs.git"
+  }
+}
