@@ -1,8 +1,8 @@
-const fetch = require("node-fetch");
+import fetch from 'node-fetch';
 
 async function authentication(req, res, next) {
     try {
-        const {modelName} = req.body;
+        const { modelName } = req.body;
         const spaceId = req.params.spaceId;
 
         const primaryServerURL = `http://localhost:8080/apis/v1/${spaceId}/secrets/`;
@@ -22,15 +22,15 @@ async function authentication(req, res, next) {
         if (!response.ok) {
             const error = await response.json();
             next(`Authentication failed with status ${response.status} and message: ${error.message}`);
+        } else {
+            const data = await response.json();
+            req.apiKey = data.apiKey;
+            req.spaceId = spaceId;
+            next();
         }
-
-        const data = await response.json();
-        req.apiKey = data.apiKey;
-        req.spaceId = spaceId;
-
     } catch (error) {
         res.status(500).send(`Error injecting API key: ${error.message}`);
     }
 }
 
-module.exports = authentication
+export default authentication;

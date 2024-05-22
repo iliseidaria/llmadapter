@@ -1,5 +1,5 @@
-const url = require('url');
-const { getTextResponse, getTextStreamingResponse } = require('./controllers/controller');
+import { parse as parseUrl } from 'url';
+import { getTextResponse, getTextStreamingResponse } from './controllers/Text.js';
 
 const routes = {
     'POST': {
@@ -34,7 +34,7 @@ function matchRoute(method, path) {
 }
 
 async function delegate(req, res) {
-    const parsedUrl = url.parse(req.url, true);
+    const parsedUrl = parseUrl(req.url, true);
     const matchedRoute = matchRoute(req.method, parsedUrl.pathname);
 
     if (matchedRoute) {
@@ -46,4 +46,4 @@ async function delegate(req, res) {
     }
 }
 
-module.exports = { delegate };
+export { delegate };

@@ -1,7 +1,7 @@
-const utils = require('../apihub-component-utils/utils.js');
-const Text = require("./handlers/Text.js");
-const LLMStreamingEmitter = require('./utils/streamEmitter.js');
-const { v4: uuidv4 } = require('uuid');
+import { v4 as uuidv4 } from 'uuid';
+
+import {LLMStreamEmitter} from '../llms/utils/streamEmitter.js';
+import * as utils from '../utils/utils.js';
 
 const cache = {};
 
@@ -57,7 +57,7 @@ async function getTextStreamingResponse(req, res) {
 
     const newSessionId = uuidv4();
     cache[newSessionId] = { data: '', lastSentIndex: 0 };
-    const streamEmitter = new LLMStreamingEmitter();
+    const streamEmitter = new LLMStreamEmitter();
 
     streamEmitter.on('data', data => {
         cache[newSessionId].data += data;
@@ -88,7 +88,7 @@ async function getTextStreamingResponse(req, res) {
     }
 }
 
-module.exports = {
+export {
     getTextResponse,
     getTextStreamingResponse
 };

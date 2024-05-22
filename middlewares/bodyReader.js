@@ -15,4 +15,4 @@ function bodyReader(req, res, next) {
         next();
     });
 }
-module.exports=bodyReader;
+export default bodyReader;
