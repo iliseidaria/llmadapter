@@ -18,6 +18,10 @@
   },
   "homepage": "https://github.com/AssistOS-AI/LLMOS#readme",
   "dependencies": {
-    "embedJs": "git+https://github.com/AssistOS-AI/embedJs.git"
+    "@anthropic-ai/sdk": "^0.20.9",
+    "@google/generative-ai": "^0.11.1",
+    "encoding": "^0.1.13",
+    "openai": "^4.46.1",
+    "uuid": "^9.0.1"
   }
 }
