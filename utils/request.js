@@ -99,7 +99,8 @@ function setCacheControl(response, options = {}) {
     response.setHeader('Cache-Control', cacheControl);
 }
 function extractParams(request) {
-    const url = new URL(request.url, `http://${request.headers.host}`);
+    const host = request.headers.host || 'localhost';
+    const url = new URL(request.url, `http://${host}`);
     let params = {};
     for (let [key, value] of url.searchParams.entries()) {
         params[key] = value;

@@ -1,4 +1,4 @@
-const LLMFactory = require('../factory/LLMFactory.js');
+import LLMFactory from  '../factory/LLMFactory.js';
 
 async function getTextResponse(APIKey,modelName, prompt, modelConfig) {
     const modelInstance = LLMFactory.createLLM(modelName, APIKey,modelConfig);
@@ -17,7 +17,7 @@ async function getTextConversationStreamingResponse(APIKey, modelName, prompt, m
     return await modelInstance.getTextConversationStreamingResponse(prompt,messagesQueue,streamEmitter);
 }
 
-module.exports={
+export {
     getTextResponse,
     getTextConversationResponse,
     getTextStreamingResponse,

@@ -1,4 +1,3 @@
-
 async function createOpenAIInstance(apiKey) {
     if (!apiKey) {
         const error = new Error("API key not provided");
@@ -20,7 +19,8 @@ function buildLLMRequestConfig(modelInstance, prompt, configs) {
     };
 }
 
-module.exports = async function (modelInstance) {
+
+export default async function (modelInstance) {
     const OpenAI = await createOpenAIInstance(modelInstance.apiKey);
 
     async function executeStandardCompletion(OpenAI, modelInstance, prompt, configs) {
@@ -53,7 +53,7 @@ module.exports = async function (modelInstance) {
     }
 
     modelInstance.getTextResponse = function (prompt, configs = {}) {
-        prompt= [{role: 'user', content: prompt}];
+        prompt = [{role: 'user', content: prompt}];
         return executeStandardCompletion(OpenAI, modelInstance, prompt, configs);
     };
 
@@ -63,7 +63,7 @@ module.exports = async function (modelInstance) {
     };
 
     modelInstance.getTextStreamingResponse = function (prompt, streamEmitter, configs = {}) {
-        prompt= [{role: 'user', content: prompt}];
+        prompt = [{role: 'user', content: prompt}];
         return executeStreamingCompletion(OpenAI, modelInstance, prompt, streamEmitter, configs);
     };
 
@@ -71,4 +71,5 @@ module.exports = async function (modelInstance) {
         const combinedPrompt = messagesQueue.concat({role: 'user', content: prompt});
         return executeStreamingCompletion(OpenAI, modelInstance, combinedPrompt, streamEmitter, configs);
     };
-};
+}
+

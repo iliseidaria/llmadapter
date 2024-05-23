@@ -1,4 +1,4 @@
-const IImageLLM=require("../../../interfaces/IImageLLM.js");
+import IImageLLM from "../../../interfaces/IImageLLM.js";
 
 class DALLE2 extends IImageLLM{
     static modelName="dall-e-2";
@@ -9,4 +9,4 @@ class DALLE2 extends IImageLLM{
         return DALLE2.modelName;
     }
 }
-module.exports=DALLE2;
+export default DALLE2;

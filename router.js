@@ -24,13 +24,24 @@ function matchRoute(method, path) {
     if (!methodRoutes) return null;
 
     for (const route in methodRoutes) {
-        const regex = new RegExp('^' + route.replace(/:\w+/g, '([^/]+)') + '$');
-        if (regex.test(path)) {
-            return {handler: methodRoutes[route], params: Request.extractParams(path, route)};
+        const routeRegex = route.replace(/:\w+/g, '([^/]+)');
+        const regex = new RegExp(`^${routeRegex}$`);
+        const match = regex.exec(path);
+
+        if (match) {
+            const paramNames = route.match(/:(\w+)/g) || [];
+            const params = {};
+
+            paramNames.forEach((paramName, index) => {
+                params[paramName.substring(1)] = match[index + 1];
+            });
+
+            return { handler: methodRoutes[route], params };
         }
     }
     return null;
 }
+
 
 async function delegate(req, res) {
     const parsedUrl = parseUrl(req.url, true);

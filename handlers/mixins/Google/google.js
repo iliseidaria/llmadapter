@@ -1,5 +1,4 @@
-const {GoogleGenerativeAI} = require("@google/generative-ai");
-const streamEmitter = require('../../utils/streamEmitter.js');
+import * as GoogleGenerativeAI from "@google/generative-ai";
 
 function createGoogleGenerativeAIInstance(apiKey) {
     if (!apiKey) {
@@ -10,7 +9,7 @@ function createGoogleGenerativeAIInstance(apiKey) {
     return new GoogleGenerativeAI(apiKey);
 }
 
-module.exports = function (modelInstance) {
+export default async function (modelInstance) {
     const GoogleGenerativeAI = createGoogleGenerativeAIInstance(modelInstance.apiKey);
     const model = GoogleGenerativeAI.getGenerativeModel({model: modelInstance.getModelName()});
     modelInstance.getResponse = async function (prompt, configs){

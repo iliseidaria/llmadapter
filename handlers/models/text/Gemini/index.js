@@ -1,4 +1,4 @@
-const ITextLLM = require("../../../interfaces/ITextLLM.js");
+import ITextLLM from "../../../interfaces/ITextLLM.js";
 
 class Gemini extends ITextLLM {
     static modelName = "gemini-pro";
@@ -12,4 +12,4 @@ class Gemini extends ITextLLM {
 
 }
 
-module.exports = Gemini;
+export default Gemini;

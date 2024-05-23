@@ -1,5 +1,4 @@
-const anthropicLib = require("@anthropic-ai/sdk");
-const streamEmitter = require('../../utils/streamEmitter.js');
+import * as  AnthropicLib from "@anthropic-ai/sdk";
 
 function createAnthropicInstance(apiKey) {
     if (!apiKey) {
@@ -7,10 +6,10 @@ function createAnthropicInstance(apiKey) {
         error.statusCode = 400;
         throw error;
     }
-    return new anthropicLib({ apiKey: apiKey });
+    return new AnthropicLib({ apiKey: apiKey });
 }
 
-module.exports = function (modelInstance) {
+export default async function (modelInstance) {
     const Anthropic = createAnthropicInstance(modelInstance.apiKey);
 
     async function executeCompletion({ prompt, configs, withStream = false, messagesQueue = null }) {

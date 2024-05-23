@@ -27,4 +27,4 @@ class ITextLLM {
     }
 }
 
-module.exports = ITextLLM;
+export default ITextLLM;

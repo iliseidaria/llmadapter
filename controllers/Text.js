@@ -7,7 +7,6 @@ const cache = {};
 
 async function getTextResponse(req, res) {
     const { modelName, prompt, messagesQueue, modelConfig, apiKey } = req.body;
-
     if (!modelName || !prompt) {
         return Request.sendResponse(res, 400, "application/json", {
             success: false,

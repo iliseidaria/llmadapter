@@ -1,4 +1,4 @@
-const ITextLLM=require("../../../interfaces/ITextLLM.js");
+import  ITextLLM from "../../../interfaces/ITextLLM.js";
 
 class Claude3 extends ITextLLM{
     static modelName="claude-3-opus-20240229";
@@ -9,4 +9,4 @@ class Claude3 extends ITextLLM{
         return Claude3.modelName;
     }
 }
-module.exports=Claude3;
+export default Claude3;

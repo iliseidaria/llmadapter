@@ -22,4 +22,4 @@ class IImageLLM{
         }
     }
 }
-module.exports=IImageLLM;
+export default IImageLLM;

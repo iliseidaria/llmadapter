@@ -1,4 +1,4 @@
-const TextWrapper = require('./wrappers/TextWrapper.js');
+import * as TextWrapper from './wrappers/TextWrapper.js';
 
 async function getTextResponse(APIKey, modelName, prompt, modelConfig, messagesQueue) {
     if (messagesQueue && messagesQueue.length > 0) {

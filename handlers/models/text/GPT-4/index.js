@@ -1,4 +1,4 @@
-const ITextLLM=require("../../../interfaces/ITextLLM.js");
+import ITextLLM from "../../../interfaces/ITextLLM.js";
 
 class GPT4 extends ITextLLM{
     static modelName = "gpt-4";
@@ -9,4 +9,4 @@ class GPT4 extends ITextLLM{
         return GPT4.modelName;
     }
 }
-module.exports = GPT4;
+export default GPT4;

@@ -1,4 +1,4 @@
-const ITextLLM = require("../../../interfaces/ITextLLM.js");
+import ITextLLM from "../../../interfaces/ITextLLM.js";
 
 class GPT4Turbo extends ITextLLM {
     static modelName = "gpt-4-turbo";
@@ -12,4 +12,4 @@ class GPT4Turbo extends ITextLLM {
 
 }
 
-module.exports = GPT4Turbo;
+export default  GPT4Turbo;

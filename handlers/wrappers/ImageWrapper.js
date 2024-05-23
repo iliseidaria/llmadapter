@@ -1,4 +1,4 @@
-const LLMFactory = require('../factory/LLMFactory.js');
+import LLMFactory from '../factory/LLMFactory.js';
 
 async function generateImage(APIKey,modelName, prompt) {
     const modelInstance = LLMFactory.createLLM(modelName, APIKey);
@@ -13,7 +13,7 @@ async function editImage(APIKey,modelName, imageReadStreamSrc,imageReadStreamMas
     return await modelInstance.editImage(prompt);
 }
 
-module.exports={
+export {
     generateImage,
     generateImageVariants,
     editImage

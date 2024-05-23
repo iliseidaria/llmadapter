@@ -1,4 +1,4 @@
-const ITextLLM = require("../../../interfaces/ITextLLM.js");
+import  ITextLLM from "../../../interfaces/ITextLLM.js";
 
 class GPT4o extends ITextLLM {
     static modelName = "gpt-4o-2024-05-13";
@@ -11,4 +11,4 @@ class GPT4o extends ITextLLM {
 
 }
 
-module.exports = GPT4o;
+export default GPT4o;

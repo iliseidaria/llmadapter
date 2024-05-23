@@ -1,6 +1,7 @@
 import http from 'http';
 import { delegate } from './router.js';
-import serverConfig from './config.json' assert { type: 'json' };
+import fsPromises from 'fs/promises';
+const serverConfig =  await fsPromises.readFile('./config.json', 'utf-8').then(JSON.parse);
 
 import bodyReader from './middlewares/bodyReader.js';
 
