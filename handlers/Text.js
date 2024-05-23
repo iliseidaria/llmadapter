@@ -1,4 +1,4 @@
-const TextWrapper = require('../llms/wrappers/TextWrapper.js');
+const TextWrapper = require('./wrappers/TextWrapper.js');
 
 async function getTextResponse(APIKey, modelName, prompt, modelConfig, messagesQueue) {
     if (messagesQueue && messagesQueue.length > 0) {

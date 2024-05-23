@@ -1,4 +1,4 @@
-const LLMFactory = require('../factory/LLMFactory');
+const LLMFactory = require('../factory/LLMFactory.js');
 
 async function generateImage(APIKey,modelName, prompt) {
     const modelInstance = LLMFactory.createLLM(modelName, APIKey);

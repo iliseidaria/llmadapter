@@ -1,4 +1,4 @@
-const OpenAITextMixin = require('../mixins/OpenAI/Text');
+const OpenAITextMixin = require('../mixins/OpenAI/Text.js');
 const OpenAIImageMixin = require('../mixins/OpenAI/Image.js');
 /*const AnthropicMixin = require('../mixins/Anthropic/anthropic.js');
 const GoogleMixin = require('../mixins/Google/google.js');*/
@@ -12,32 +12,32 @@ const Mixins = {
 
 const LLMs = {
     "GPT-3.5-Turbo": {
-        instance: require('../models/text/GPT-3.5-Turbo'),
+        instance: require('../models/text/GPT-3.5-Turbo/index.js'),
     },
     "GPT-4": {
-        instance: require('../models/text/GPT-4'),
+        instance: require('../models/text/GPT-4/index.js'),
     },
     "GPT-4-Turbo": {
-        instance: require('../models/text/GPT-4-Turbo'),
+        instance: require('../models/text/GPT-4-Turbo/index.js'),
     },
     "GPT-4o": {
-        instance: require('../models/text/GPT-4o'),
+        instance: require('../models/text/GPT-4o/index.js'),
     },
     "DALL-E-3": {
-        instance: require('../models/image/DALL-E-3'),
+        instance: require('../models/image/DALL-E-3/index.js'),
         defaultMixins: ['openAI_Text'],
     },
     "DALL-E-2": {
-        instance: require('../models/image/DALL-E-2'),
+        instance: require('../models/image/DALL-E-2/index.js'),
     },
     "Claude-3": {
-        instance: require('../models/text/Claude-3'),
+        instance: require('../models/text/Claude-3/index.js'),
     },
     "Claude-2": {
-        instance: require('../models/text/Claude-2'),
+        instance: require('../models/text/Claude-2/index.js'),
     },
     "Gemini": {
-        instance: require('../models/text/Gemini'),
+        instance: require('../models/text/Gemini/index.js'),
     },
 };
 

@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { createStreamEmitter } from '../llms/utils/streamEmitter.js';
+import { createStreamEmitter } from '../handlers/utils/streamEmitter.js';
 import * as Request from '../utils/request.js';
 import * as Text from '../handlers/Text.js';
 

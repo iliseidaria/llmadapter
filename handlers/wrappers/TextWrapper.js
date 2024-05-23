@@ -1,4 +1,4 @@
-const LLMFactory = require('../factory/LLMFactory');
+const LLMFactory = require('../factory/LLMFactory.js');
 
 async function getTextResponse(APIKey,modelName, prompt, modelConfig) {
     const modelInstance = LLMFactory.createLLM(modelName, APIKey,modelConfig);
