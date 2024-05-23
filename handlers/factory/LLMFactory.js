@@ -22,10 +22,12 @@ const LLMs = {
     },
     "GPT-4o": {
         instance: (await import('../models/text/GPT-4o/index.js')).default,
+        defaultMixins: ['openAI_Text'],
+
     },
     "DALL-E-3": {
         instance: (await import('../models/image/DALL-E-3/index.js')).default,
-        defaultMixins: ['openAI_Text'],
+        defaultMixins: ['openAI_Image'],
     },
     "DALL-E-2": {
         instance: (await import('../models/image/DALL-E-2/index.js')).default,
@@ -57,14 +59,13 @@ class LLMFactory {
         config = Object.keys(config).length ? config : (LLMClass.instance.defaultConfig || {});
 
         const instance = new LLMClass.instance(apiKey, config);
-
-        allMixins.forEach(mixinName => {
-            const mixin = Mixins[mixinName];
-            if (!mixin) {
-                this._createError(`No mixin found with the name: ${mixinName}`, 404);
+        for (const mixin of allMixins) {
+            const mixinFunction = Mixins[mixin];
+            if (!mixinFunction) {
+                throw this._createError(`No mixin found with the name: ${mixin}`, 404);
             }
-            mixin(instance);
-        });
+            await mixinFunction(instance);
+        }
 
         return instance;
     }

@@ -14,7 +14,7 @@ async function getTextResponse(req, res) {
         });
     }
     try {
-        const modelResponse = await Text.getTextResponse(modelName, prompt, modelConfig, messagesQueue);
+        const modelResponse = await Text.getTextResponse(apiKey,modelName, prompt, modelConfig, messagesQueue);
         Request.sendResponse(res, 200, "application/json", {
             success: true,
             data: modelResponse
@@ -69,7 +69,7 @@ async function getTextStreamingResponse(req, res) {
     });
 
     try {
-        await Text.getTextStreamingResponse(modelName, prompt, modelConfig, messagesQueue, streamEmitter);
+        await Text.getTextStreamingResponse(apiKey,modelName, prompt, modelConfig, messagesQueue, streamEmitter);
         Request.sendResponse(res, 200, "application/json", {
             success: true,
             sessionId: newSessionId,
