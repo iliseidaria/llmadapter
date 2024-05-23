@@ -1,8 +1,9 @@
 import { EventEmitter } from 'events';
 
-class LLMStreamingEmitter extends EventEmitter {
-}
+class LLMStreamingEmitter extends EventEmitter {}
 
-const LLMStreamEmitter = new LLMStreamingEmitter();
+const createStreamEmitter = () => {
+    return new LLMStreamingEmitter();
+};
 
-export { LLMStreamEmitter, LLMStreamingEmitter };
+export { createStreamEmitter };

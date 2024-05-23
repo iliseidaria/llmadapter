@@ -3,8 +3,6 @@ import { delegate } from './router.js';
 import serverConfig from './config.json' assert { type: 'json' };
 
 import bodyReader from './middlewares/bodyReader.js';
-import authentication from './middlewares/authentication.js';
-import authorization from './middlewares/authorization.js';
 
 class Server {
     constructor() {
@@ -45,11 +43,8 @@ class Server {
 const server = new Server();
 
 server.use(bodyReader);
-server.use(authentication);
-server.use(authorization);
 
 server.listen(serverConfig.PORT, () => {
     console.log(`Server running on http://localhost:${serverConfig.PORT}/`);
 });
 
-export default server;
