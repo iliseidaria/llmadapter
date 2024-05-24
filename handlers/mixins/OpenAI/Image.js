@@ -29,7 +29,7 @@ export default async function (modelInstance) {
             prompt: fillTemplate(promptRevisionOverrideTemplate.prompt, { prompt: prompt }),
             ...(configs.size ? { size: configs.size } : {}),
             ...(configs.quality ? { quality: configs.quality } : {}),
-            n: 1
+            n: configs.variants || 1,
         });
         const image = response.data[0].url;
         delete response.data[0].url;

@@ -20,6 +20,8 @@ class IImageLLM{
             error.statusCode = 400
             throw error
         }
+        this.apiKey=APIKey;
+        this.config=config;
     }
 }
 export default IImageLLM;

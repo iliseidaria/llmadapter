@@ -31,6 +31,7 @@ const LLMs = {
     },
     "DALL-E-2": {
         instance: (await import('../models/image/DALL-E-2/index.js')).default,
+        defaultMixins: ['openAI_Image'],
     },
     "Claude-3": {
         instance: (await import('../models/text/Claude-3/index.js')).default,

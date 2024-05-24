@@ -17,9 +17,13 @@ async function generateImageEdit(request, response) {
     }
 }
 async function generateImage(request, response) {
-    const { modelName, prompt, apiKey } = req.body;
+    const { modelName, prompt, APIKey, variants } = request.body;
     try {
-        const modelResponse = await Image.generateImage(apiKey, modelName, prompt);
+        const modelResponse = await Image.generateImage(APIKey, modelName, prompt, {
+            variants: variants,
+            size: "512x512",
+            quality: "standard",
+        });
         Request.sendResponse(response, 200, "application/json", {
             success: true,
             data: modelResponse
