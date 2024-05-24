@@ -2,7 +2,7 @@ import * as Request from '../utils/request.js';
 import * as Image from '../handlers/Image.js';
 
 async function generateImageEdit(request, response) {
-    const { modelName, prompt, apiKey } = req.body;
+    const { modelName, prompt, APIKey } = req.body;
     try {
 
         Request.sendResponse(response, 200, "application/json", {
@@ -21,7 +21,7 @@ async function generateImage(request, response) {
     try {
         const modelResponse = await Image.generateImage(APIKey, modelName, prompt, {
             variants: variants,
-            size: "512x512",
+            size: "1024x1024",
             quality: "standard",
         });
         Request.sendResponse(response, 200, "application/json", {

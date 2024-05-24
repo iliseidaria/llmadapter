@@ -11,7 +11,7 @@ class IImageLLM{
             throw error
         }
         if(APIKey===undefined){
-            const error = new Error("apiKey is required")
+            const error = new Error("APIKey is required")
             error.statusCode = 400
             throw error
         }
@@ -20,7 +20,7 @@ class IImageLLM{
             error.statusCode = 400
             throw error
         }
-        this.apiKey=APIKey;
+        this.APIKey=APIKey;
         this.config=config;
     }
 }
