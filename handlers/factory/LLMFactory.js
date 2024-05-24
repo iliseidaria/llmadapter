@@ -45,7 +45,7 @@ const LLMs = {
 };
 
 class LLMFactory {
-    static async createLLM(LLMName, apiKey, config = {}, ...additionalMixins) {
+    static async createLLM(LLMName, APIKey, config = {}, ...additionalMixins) {
         const LLMClass = LLMs[LLMName];
         if (!LLMClass) {
             throw this._createError(`No LLM found with the name: ${LLMName}`, 404);
@@ -59,7 +59,7 @@ class LLMFactory {
 
         config = Object.keys(config).length ? config : (LLMClass.instance.defaultConfig || {});
 
-        const instance = new LLMClass.instance(apiKey, config);
+        const instance = new LLMClass.instance(APIKey, config);
         for (const mixin of allMixins) {
             const mixinFunction = Mixins[mixin];
             if (!mixinFunction) {

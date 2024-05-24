@@ -1,11 +1,11 @@
-async function createOpenAIInstance(apiKey) {
-    if (!apiKey) {
+async function createOpenAIInstance(APIKey) {
+    if (!APIKey) {
         const error = new Error("API key not provided");
         error.statusCode = 400;
         throw error;
     }
     const OpenAILib = (await import('openai')).default;
-    return new OpenAILib({apiKey});
+    return new OpenAILib({apiKey:APIKey});
 }
 
 function buildLLMRequestConfig(modelInstance, prompt, configs) {
@@ -21,7 +21,7 @@ function buildLLMRequestConfig(modelInstance, prompt, configs) {
 
 
 export default async function (modelInstance) {
-    const OpenAI = await createOpenAIInstance(modelInstance.apiKey);
+    const OpenAI = await createOpenAIInstance(modelInstance.APIKey);
 
     async function executeStandardCompletion(OpenAI, modelInstance, prompt, configs) {
         const LLMRequestConfig = buildLLMRequestConfig(modelInstance, prompt, configs);

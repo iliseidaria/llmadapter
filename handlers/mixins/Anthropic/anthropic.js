@@ -1,16 +1,16 @@
 import * as  AnthropicLib from "@anthropic-ai/sdk";
 
-function createAnthropicInstance(apiKey) {
-    if (!apiKey) {
+function createAnthropicInstance(APIKey) {
+    if (!APIKey) {
         const error = new Error("API key not provided");
         error.statusCode = 400;
         throw error;
     }
-    return new AnthropicLib({ apiKey: apiKey });
+    return new AnthropicLib({ APIKey: APIKey });
 }
 
 export default async function (modelInstance) {
-    const Anthropic = createAnthropicInstance(modelInstance.apiKey);
+    const Anthropic = createAnthropicInstance(modelInstance.APIKey);
 
     async function executeCompletion({ prompt, configs, withStream = false, messagesQueue = null }) {
         const { temperature, maxTokens } = configs;

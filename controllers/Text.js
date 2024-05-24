@@ -6,7 +6,7 @@ import * as Text from '../handlers/Text.js';
 const cache = {};
 
 async function getTextResponse(req, res) {
-    const { modelName, prompt, messagesQueue, modelConfig, apiKey } = req.body;
+    const { modelName, prompt, messagesQueue, modelConfig, APIKey } = req.body;
     if (!modelName || !prompt) {
         return Request.sendResponse(res, 400, "application/json", {
             success: false,
@@ -14,7 +14,7 @@ async function getTextResponse(req, res) {
         });
     }
     try {
-        const modelResponse = await Text.getTextResponse(apiKey,modelName, prompt, modelConfig, messagesQueue);
+        const modelResponse = await Text.getTextResponse(APIKey,modelName, prompt, modelConfig, messagesQueue);
         Request.sendResponse(res, 200, "application/json", {
             success: true,
             data: modelResponse
@@ -28,7 +28,7 @@ async function getTextResponse(req, res) {
 }
 
 async function getTextStreamingResponse(req, res) {
-    const { modelName, prompt, messagesQueue, modelConfig, apiKey, sessionId } = req.body;
+    const { modelName, prompt, messagesQueue, modelConfig, APIKey, sessionId } = req.body;
 
     if (!modelName || !prompt) {
         return Request.sendResponse(res, 400, "application/json", {
@@ -69,7 +69,7 @@ async function getTextStreamingResponse(req, res) {
     });
 
     try {
-        await Text.getTextStreamingResponse(apiKey,modelName, prompt, modelConfig, messagesQueue, streamEmitter);
+        await Text.getTextStreamingResponse(APIKey,modelName, prompt, modelConfig, messagesQueue, streamEmitter);
         Request.sendResponse(res, 200, "application/json", {
             success: true,
             sessionId: newSessionId,

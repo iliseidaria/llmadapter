@@ -5,18 +5,18 @@ const LLMFactory = require('../handlers/factory/LLMFactory.js');
 const streamEmitter = require('../handlers/utils/streamEmitter.js');
 
 
-const OpenAIApiKey = "";
-const AnthropicApikey = "";
-const GoogleApiKey = "";
+const OpenAIAPIKey = "";
+const AnthropicAPIKey = "";
+const GoogleAPIKey = "";
 
-const GPT3_Turbo = LLMFactory.createLLM("GPT-3.5-Turbo", OpenAIApiKey, {}, "openAI_Text");
-const GPT4 = LLMFactory.createLLM("GPT-4", OpenAIApiKey, {}, "openAI_Text");
-const GPT4_Turbo = LLMFactory.createLLM("GPT-4-Turbo", OpenAIApiKey, {}, "openAI_Text");
-const GPT4o = LLMFactory.createLLM("GPT-4o", OpenAIApiKey, {}, "openAI_Text");
-/*const Claude2=LLMFactory.createLLM("Claude-2", {}, AnthropicApikey, "anthropic");
-const Claude3=LLMFactory.createLLM("Claude-3", {}, AnthropicApikey, "anthropic");
+const GPT3_Turbo = LLMFactory.createLLM("GPT-3.5-Turbo", OpenAIAPIKey, {}, "openAI_Text");
+const GPT4 = LLMFactory.createLLM("GPT-4", OpenAIAPIKey, {}, "openAI_Text");
+const GPT4_Turbo = LLMFactory.createLLM("GPT-4-Turbo", OpenAIAPIKey, {}, "openAI_Text");
+const GPT4o = LLMFactory.createLLM("GPT-4o", OpenAIAPIKey, {}, "openAI_Text");
+/*const Claude2=LLMFactory.createLLM("Claude-2", {}, AnthropicAPIKey, "anthropic");
+const Claude3=LLMFactory.createLLM("Claude-3", {}, AnthropicAPIKey, "anthropic");
 
-const Gemini= LLMFactory.createLLM("Gemini", {}, GoogleApiKey, "google");*/
+const Gemini= LLMFactory.createLLM("Gemini", {}, GoogleAPIKey, "google");*/
 
 
 (async () => {
