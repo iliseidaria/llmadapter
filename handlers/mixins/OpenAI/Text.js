@@ -42,11 +42,10 @@ export default async function (modelInstance) {
             for await (const chunk of stream) {
                 streamEmitter.emit('data', chunk.choices[0]?.delta?.content || '');
             }
-            streamEmitter.emit('end');
             const response = await stream.finalChatCompletion();
             const messages = response.choices.map(choice => choice.message.content);
             delete response.choices;
-            streamEmitter.emit('final', {messages: messages, metadata: response});
+            streamEmitter.emit('end', {fullMessage: messages, metadata: response});
         })();
 
         return streamEmitter;
