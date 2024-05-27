@@ -29,10 +29,14 @@ export default async function (modelInstance) {
             prompt: fillTemplate(promptRevisionOverrideTemplate.prompt, {prompt: prompt}),
             ...(configs.size ? {size: configs.size} : {}),
             ...(configs.quality ? {quality: configs.quality} : {}),
-            n: configs.variants || 1,
-            response_format: "url"
+            n: parseInt(configs.variants) || 1,
+            response_format: configs.responseFormat || "url",
         });
-        return response.data
+        let images = []
+        for(let imageObj of response.data){
+            images.push(imageObj.url || imageObj.b64_json);
+        }
+        return images;
     };
 
     modelInstance.generateImageVariants = async function (imageReadStream, configs) {

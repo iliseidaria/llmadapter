@@ -23,6 +23,7 @@ async function generateImage(request, response) {
             variants: variants,
             size: "1024x1024",
             quality: "standard",
+            responseFormat: "b64_json"
         });
         Request.sendResponse(response, 200, "application/json", {
             success: true,
