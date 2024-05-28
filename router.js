@@ -14,7 +14,8 @@ const routes = {
         '/apis/v1/image/edit': Image.generateImageEdit,
         '/apis/v1/image/variants': Image.generateImageVariants,
         '/apis/v1/video/generate': Video.generateVideo,
-        '/apis/v1/audio/generate': Audio.generateAudio
+        '/apis/v1/audio/generate': Audio.textToSpeech,
+        '/apis/v1/audio/listVoicesAndEmotions': Audio.listVoicesAndEmotions
     },
     'PUT': {},
 };
