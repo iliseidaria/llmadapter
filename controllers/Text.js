@@ -49,9 +49,10 @@ async function getTextStreamingResponse(req, res) {
         'Connection': 'keep-alive'
     });
 
-    res.write(`data: ${JSON.stringify({ sessionId })}\n\n`);
-
     cache[sessionId] = { data: '', lastSentIndex: 0, end: false };
+
+    res.write(`event: beginSession\ndata: ${JSON.stringify({ sessionId })}\n\n`);
+
     const streamEmitter = createStreamEmitter();
 
     streamEmitter.on('data', data => {
@@ -65,8 +66,16 @@ async function getTextStreamingResponse(req, res) {
         cache[sessionId].end = true;
         cache[sessionId].fullResponse = fullResponse.fullMessage;
         cache[sessionId].metadata = fullResponse.metadata;
-        res.write(`event: end\ndata: ${JSON.stringify({ end: true, fullResponse: cache[sessionId].fullResponse, metadata: cache[sessionId].metadata })}\n\n`);
+        res.write(`event: end\ndata: ${JSON.stringify({ fullResponse: cache[sessionId].fullResponse, metadata: cache[sessionId].metadata })}\n\n`);
         res.end();
+        delete cache[sessionId];
+    });
+
+    streamEmitter.on('error', error => {
+        if (!res.writableEnded) {
+            res.write(`event: error\ndata: ${JSON.stringify({ success: false, message: error.message })}\n\n`);
+            res.end();
+        }
         delete cache[sessionId];
     });
 
