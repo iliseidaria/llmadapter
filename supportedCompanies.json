@@ -1,13 +1,48 @@
 [
     {
         "company": "OpenAI",
-        "authentication": ["APIKey"],
-        "models": ["GPT-3.5-Turbo", "GPT4-o", "GPT4", "DALL-E 2", "DALL-E 3"]
+        "authentication": [
+            "APIKey"
+        ],
+        "models": [
+            {
+                "name": "GPT-3.5-Turbo",
+                "type": "text"
+            },
+            {
+                "name": "GPT4-o",
+                "type": "text"
+            },
+            {
+                "name": "GPT4",
+                "type": "text"
+            },
+            {
+                "name": "DALL-E-2",
+                "type": "image"
+            },
+            {
+                "name": "DALL-E-3",
+                "type": "image"
+            }
+        ]
     },
     {
         "company": "PlayHT",
-        "authentication": ["APIKey", "userId"],
-        "models": ["PlayHT2.0", "PlayHT2.0-Turbo"]
+        "authentication": [
+            "APIKey",
+            "userId"
+        ],
+        "models": [
+            {
+                "name": "PlayHT2.0",
+                "type": "audio"
+            },
+            {
+                "name": "PlayHT2.0-Turbo",
+                "type": "audio"
+            }
+        ]
     }
 ]
 
