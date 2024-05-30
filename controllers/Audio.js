@@ -1,7 +1,5 @@
 import fetch from "node-fetch";
 import * as Request from '../utils/request.js';
-const auth = "";
-const userId = "";
 async function textToSpeech(request, response){
     const url = "https://api.play.ht/api/v2/tts/stream";
     const options = {
@@ -9,8 +7,8 @@ async function textToSpeech(request, response){
         headers: {
             accept: "audio/mpeg",
             "content-type": "application/json",
-            AUTHORIZATION: auth,
-            "X-USER-ID": userId,
+            AUTHORIZATION: request.body.APIKey,
+            "X-USER-ID": request.body.userId,
         },
         body: JSON.stringify({
             voice_engine: 'PlayHT2.0',
@@ -34,8 +32,8 @@ async function listVoicesAndEmotions(request, response){
         method: 'GET',
         headers: {
             accept: 'application/json',
-            AUTHORIZATION: auth,
-            'X-USER-ID': userId
+            AUTHORIZATION: request.body.APIKey,
+            'X-USER-ID': request.body.userId
         }
     };
     try {

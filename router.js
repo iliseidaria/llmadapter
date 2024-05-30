@@ -4,9 +4,12 @@ import * as Text from './controllers/Text.js';
 import * as Audio from './controllers/Audio.js';
 import * as Image from './controllers/Image.js';
 import * as Video from './controllers/Video.js';
+import * as Util from './controllers/Util.js';
 
 const routes = {
-    'GET': {},
+    'GET': {
+        '/apis/v1/authRequirements': Util.getAuthRequirements
+    },
     'POST': {
         '/apis/v1/text/generate': Text.getTextResponse,
         '/apis/v1/text/streaming/generate': Text.getTextStreamingResponse,

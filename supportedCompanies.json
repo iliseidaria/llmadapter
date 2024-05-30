@@ -1,0 +1,15 @@
+[
+    {
+        "company": "OpenAI",
+        "authentication": ["APIKey"],
+        "models": ["GPT-3.5-Turbo", "GPT4-o", "GPT4", "DALL-E 2", "DALL-E 3"]
+    },
+    {
+        "company": "PlayHT",
+        "authentication": ["APIKey", "userId"],
+        "models": ["PlayHT2.0", "PlayHT2.0-Turbo"]
+    }
+]
+
+
+
