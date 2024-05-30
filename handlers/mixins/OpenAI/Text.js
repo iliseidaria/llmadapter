@@ -5,17 +5,18 @@ async function createOpenAIInstance(APIKey) {
         throw error;
     }
     const OpenAILib = (await import('openai')).default;
-    return new OpenAILib({apiKey:APIKey});
+    return new OpenAILib({apiKey: APIKey});
 }
 
 function buildLLMRequestConfig(modelInstance, prompt, configs) {
-    const {variants, temperature, maxTokens} = configs;
+    const {variants, temperature, maxTokens, response_format} = configs;
     return {
         model: modelInstance.getModelName(),
         messages: prompt,
         ...(variants ? {n: variants} : {}),
         ...(temperature ? {temperature} : {}),
-        ...(maxTokens ? {max_tokens: maxTokens} : {})
+        ...(maxTokens ? {max_tokens: maxTokens} : {}),
+        ...(response_format === "json" ? {response_format: {"type": "json_object"}} : {})
     };
 }
 

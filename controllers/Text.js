@@ -33,10 +33,11 @@ async function getTextStreamingResponse(req, res) {
     let { sessionId } = req.body;
 
     if (!modelName || !prompt || !APIKey) {
-        return res.status(400).json({
+        Request.sendResponse(res, 400, "application/json", {
             success: false,
             message: "Bad Request. APIKey, modelName, and prompt are required"
         });
+        return;
     }
 
     if (!sessionId) {
