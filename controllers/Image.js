@@ -17,14 +17,15 @@ async function generateImageEdit(request, response) {
     }
 }
 async function generateImage(request, response) {
-    const { modelName, prompt, APIKey, variants } = request.body;
     try {
-        const modelResponse = await Image.generateImage(APIKey, modelName, prompt, {
-            variants: variants,
-            size: "1024x1024",
-            quality: "standard",
-            responseFormat: "b64_json"
-        });
+        const modelName =  request.body.modelName;
+        delete request.body.modelName;
+        const APIKey =  request.body.APIKey;
+        delete request.body.APIKey;
+        const prompt =  request.body.prompt;
+        delete request.body.prompt;
+        request.body.responseFormat = "b64_json";
+        const modelResponse = await Image.generateImage(APIKey, modelName, prompt, request.body);
         Request.sendResponse(response, 200, "application/json", {
             success: true,
             data: modelResponse

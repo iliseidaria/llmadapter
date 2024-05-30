@@ -30,23 +30,14 @@ export default async function (modelInstance) {
             ...(configs.size ? {size: configs.size} : {}),
             ...(configs.quality ? {quality: configs.quality} : {}),
             n: parseInt(configs.variants) || 1,
+            style: configs.style || "vivid",
             response_format: configs.responseFormat || "url",
+            quality: configs.quality || "standard",
         });
         let images = []
         for(let imageObj of response.data){
             images.push(imageObj.url || imageObj.b64_json);
         }
         return images;
-    };
-
-    modelInstance.generateImageVariants = async function (imageReadStream, configs) {
-        const response = await OpenAI.images.createVariation({
-            model: "dall-e-2",
-            image: imageReadStream,
-            ...(configs.size ? {size: configs.size} : {}),
-            ...(configs.variants ? {n: configs.variants} : {}),
-            ...(configs.response_format ? {response_format: configs.response_format} : {}),
-        });
-        return response;
     };
 }
