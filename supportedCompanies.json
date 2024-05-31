@@ -32,7 +32,8 @@
                 "quality": [
                     "standard",
                     "hd"
-                ]
+                ],
+                "variants": 4
             },
             {
                 "name": "DALL-E-3",
@@ -49,7 +50,8 @@
                 "quality": [
                     "standard",
                     "hd"
-                ]
+                ],
+                "variants": 4
             }
         ]
     },
@@ -68,6 +70,30 @@
                 "name": "PlayHT2.0-Turbo",
                 "type": "audio"
             }
+        ]
+    },
+    {
+        "company": "MidJourney",
+        "authentication": [
+            "APIKey"
+        ],
+        "models": [
+            {
+                "name": "MidJourney",
+                "type": "image",
+                "buttons": {
+                        "U1": "Upscale first image",
+                        "U2": "Upscale second image",
+                        "U3": "Upscale third image",
+                        "U4": "Upscale fourth image",
+                        "\uD83D\uDD04": "Regenerate",
+                        "V1": "Variation for first image",
+                        "V2": "Variation for second image",
+                        "V3": "Variation for third image",
+                        "V4": "Variation for fourth image"
+                    }
+            }
+
         ]
     }
 ]
