@@ -10,11 +10,11 @@
                 "type": "text"
             },
             {
-                "name": "GPT4-o",
+                "name": "GPT-4o",
                 "type": "text"
             },
             {
-                "name": "GPT4",
+                "name": "GPT-4",
                 "type": "text"
             },
             {
