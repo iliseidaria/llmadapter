@@ -6,7 +6,7 @@ class IImageLLM{
             throw error
         }
         if(this.getModelName===undefined){
-            const error = new Error("Classes extending ITextLLM must implement getModelName method")
+                const error = new Error("Classes extending IImageLLM must implement getModelName method")
             error.statusCode = 500
             throw error
         }

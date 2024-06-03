@@ -40,6 +40,9 @@ const LLMs = {
     "Gemini": {
         instance: (await import('../models/text/Gemini/index.js')).default,
     },
+    "MidJourney": {
+        instance: (await import('../models/image/MidJourney/index.js')).default,
+    },
 };
 
 class LLMFactory {
