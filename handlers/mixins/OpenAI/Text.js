@@ -20,6 +20,45 @@ function buildLLMRequestConfig(modelInstance, prompt, configs) {
     };
 }
 
+const trimJSONMarkers = (string) => {
+    const jsonStartMarkers = ['```json\n', '```json'];
+    const jsonEndMarkers = ['```'];
+
+    for (let marker of jsonStartMarkers) {
+        if (string.startsWith(marker)) {
+            string = string.slice(marker.length)
+            break;
+        }
+    }
+
+    for (let marker of jsonEndMarkers) {
+        if (string.endsWith(marker)) {
+            string = string.slice(0, -marker.length)
+            break;
+        }
+    }
+    return string;
+}
+
+async function ensureJSONResponseFormat(llmResponseArray, modelInstance, llmRequestFallback = false) {
+    return await Promise.all(llmResponseArray.map(async llmResponse => {
+        let trimmedResponse = trimJSONMarkers(llmResponse.trim());
+
+        try {
+            const parsedResponse = JSON.parse(trimmedResponse);
+            return JSON.stringify(parsedResponse);
+        } catch (error) {
+            if (llmRequestFallback) {
+                const prompt = `Please refactor the following response to be formatted strictly as JSON, without including any markdown or other delimiters. Ensure the JSON is valid and properly structured:\n\n${trimmedResponse}`;
+                const response = await modelInstance.chat.completions.create(
+                    buildLLMRequestConfig(modelInstance, prompt, {response_format: "json"})
+                );
+                return trimJSONMarkers(response.choices[0].message.content);
+            }
+            return llmResponse;
+        }
+    }));
+}
 
 export default async function (modelInstance) {
     const OpenAI = await createOpenAIInstance(modelInstance.APIKey);
@@ -29,10 +68,14 @@ export default async function (modelInstance) {
         const response = await OpenAI.chat.completions.create(LLMRequestConfig);
         const messages = response.choices.map(choice => choice.message.content);
         delete response.choices;
-        return {
-            messages: messages,
-            metadata: response
-        };
+
+        if (configs.response_format === "json") {
+            return {
+                messages: await ensureJSONResponseFormat(messages, OpenAI, true),
+                metadata: response
+            }
+        }
+        return { messages, metadata: response };
     }
 
     async function executeStreamingCompletion(OpenAI, modelInstance, prompt, streamEmitter, configs) {
@@ -41,12 +84,14 @@ export default async function (modelInstance) {
 
         (async () => {
             for await (const chunk of stream) {
-                streamEmitter.emit('data', chunk.choices[0]?.delta?.content || '');
+                const content = trimJSONMarkers(chunk.choices[0]?.delta?.content || '');
+                streamEmitter.emit('data', content);
             }
             const response = await stream.finalChatCompletion();
             const messages = response.choices.map(choice => choice.message.content);
             delete response.choices;
-            streamEmitter.emit('end', {fullMessage: messages, metadata: response});
+            const trimmedMessages = messages.map(trimJSONMarkers);
+            streamEmitter.emit('end', { fullMessage: trimmedMessages, metadata: response });
         })();
 
         return streamEmitter;
@@ -72,4 +117,3 @@ export default async function (modelInstance) {
         return executeStreamingCompletion(OpenAI, modelInstance, combinedPrompt, streamEmitter, configs);
     };
 }
-
