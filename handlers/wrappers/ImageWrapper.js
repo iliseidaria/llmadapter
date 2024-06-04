@@ -5,12 +5,12 @@ async function generateImage(APIKey, modelName, prompt, configs) {
     return await modelInstance.generateImage(prompt, configs);
 }
 async function generateImageVariants(APIKey,modelName, imageReadStreamSrc, configs) {
-    const modelInstance = LLMFactory.createLLM(modelName, APIKey);
+    const modelInstance = await LLMFactory.createLLM(modelName, APIKey);
     return await modelInstance.generateImageVariants(imageReadStreamSrc, configs);
 }
-async function editImage(APIKey,modelName, imageReadStreamSrc,imageReadStreamMask, configs) {
-    const modelInstance = LLMFactory.createLLM(modelName, APIKey);
-    return await modelInstance.editImage(prompt);
+async function editImage(APIKey, modelName, configs) {
+    const modelInstance = await LLMFactory.createLLM(modelName, APIKey);
+    return await modelInstance.editImage(configs);
 }
 
 export {

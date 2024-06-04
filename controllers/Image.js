@@ -1,10 +1,13 @@
 import * as Request from '../utils/request.js';
 import * as Image from '../handlers/Image.js';
 
-async function generateImageEdit(request, response) {
-    const { modelName, prompt, APIKey } = req.body;
+async function editImage(request, response) {
     try {
-
+        const modelName =  request.body.modelName;
+        delete request.body.modelName;
+        const APIKey =  request.body.APIKey;
+        delete request.body.APIKey;
+        const modelResponse = await Image.editImage(APIKey, modelName, request.body);
         Request.sendResponse(response, 200, "application/json", {
             success: true,
             data: modelResponse
@@ -52,7 +55,7 @@ async function generateImageVariants(request, response) {
 }
 
 export {
-    generateImageEdit,
+    editImage,
     generateImage,
     generateImageVariants
 }

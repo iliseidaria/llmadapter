@@ -5,10 +5,11 @@ import fetch from "node-fetch";
 class MidJourney extends IImageLLM{
     constructor(APIKey,config) {
         super(APIKey,config);
+        this.result = "";
     }
     getModelName(){
     }
-    async generateImage(prompt, configs) {
+    async generateImage(prompt) {
         const url = "https://api.mymidjourney.ai/api/v1/midjourney/imagine";
         const options = {
             method: "POST",
@@ -43,12 +44,35 @@ class MidJourney extends IImageLLM{
                     if (imageObj.status === "DONE") {
                         clearInterval(intervalId);
                         resolve(imageObj);
+                    } else if(imageObj.status === "FAIL") {
+                        clearInterval(intervalId);
+                        reject(imageObj.error);
                     }
                 } catch (e) {
                     reject(e);
                 }
-            }, 3000);
+            }, 5000);
         });
+    }
+    async editImage(configs){
+        const url = "https://api.mymidjourney.ai/api/v1/midjourney/button";
+        const options = {
+            method: "POST",
+            headers: {
+                "content-type": "application/json",
+                Authorization: `Bearer ${this.APIKey}`,
+            },
+            body: JSON.stringify({
+                messageId: configs.messageId,
+                button: configs.action,
+            }),
+        };
+        const response = await fetch(url, options);
+        const task = await response.json();
+        if(!task.success){
+            return task;
+        }
+        return await this.getImageStatus(task.messageId);
     }
 }
 export default MidJourney;

@@ -14,7 +14,7 @@ const routes = {
         '/apis/v1/text/generate': Text.getTextResponse,
         '/apis/v1/text/streaming/generate': Text.getTextStreamingResponse,
         '/apis/v1/image/generate': Image.generateImage,
-        '/apis/v1/image/edit': Image.generateImageEdit,
+        '/apis/v1/image/edit': Image.editImage,
         '/apis/v1/image/variants': Image.generateImageVariants,
         '/apis/v1/video/generate': Video.generateVideo,
         '/apis/v1/audio/generate': Audio.textToSpeech,

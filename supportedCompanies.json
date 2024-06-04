@@ -90,7 +90,23 @@
                         "V1": "Variation for first image",
                         "V2": "Variation for second image",
                         "V3": "Variation for third image",
-                        "V4": "Variation for fourth image"
+                        "V4": "Variation for fourth image",
+                        "Zoom Out 2x": "Zoom Out 2x",
+                        "Zoom Out 1.5x": "Zoom Out 1.5x",
+                        "Vary (Strong)": "Vary (Strong)",
+                        "Vary (Subtle)": "Vary (Subtle)",
+                        "Vary (Region)": "Vary (Region)",
+                        "⬅\uFE0F": "Pan Left",
+                        "➡\uFE0F": "Pan Right",
+                        "⬆\uFE0F": "Pan Up",
+                        "⬇\uFE0F": "Pan Down",
+                        "Make Square": "Make Square",
+                        "Upscale (2x)": "Upscale (2x)",
+                        "Upscale (4x)": "Upscale (4x)",
+                        "Redo Upscale (2x)": "Redo Upscale (2x)",
+                        "Redo Upscale (4x)": "Redo Upscale (4x)",
+                        "Upscale (Creative)": "Upscale (Creative)",
+                        "Upscale (Subtle)": "Upscale (Subtle)"
                     }
             }
 
