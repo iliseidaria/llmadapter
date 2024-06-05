@@ -82,15 +82,14 @@
                 "name": "MidJourney",
                 "type": "image",
                 "buttons": {
-                        "U1": "Upscale first image",
-                        "U2": "Upscale second image",
-                        "U3": "Upscale third image",
-                        "U4": "Upscale fourth image",
-                        "\uD83D\uDD04": "Regenerate",
-                        "V1": "Variation for first image",
-                        "V2": "Variation for second image",
-                        "V3": "Variation for third image",
-                        "V4": "Variation for fourth image",
+                        "U1": "Upscale V1",
+                        "U2": "Upscale V2",
+                        "U3": "Upscale V3",
+                        "U4": "Upscale V4",
+                        "V1": "Variation V1",
+                        "V2": "Variation V2",
+                        "V3": "Variation V3",
+                        "V4": "Variation V4",
                         "Zoom Out 2x": "Zoom Out 2x",
                         "Zoom Out 1.5x": "Zoom Out 1.5x",
                         "Vary (Strong)": "Vary (Strong)",
@@ -106,8 +105,9 @@
                         "Redo Upscale (2x)": "Redo Upscale (2x)",
                         "Redo Upscale (4x)": "Redo Upscale (4x)",
                         "Upscale (Creative)": "Upscale (Creative)",
-                        "Upscale (Subtle)": "Upscale (Subtle)"
-                    }
+                        "Upscale (Subtle)": "Upscale (Subtle)",
+                        "\uD83D\uDD04": "\uD83D\uDD04"
+                }
             }
 
         ]

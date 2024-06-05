@@ -24,8 +24,8 @@ class MidJourney extends IImageLLM{
 
         const response = await fetch(url, options);
         const task = await response.json();
-        if(!task.success){
-            return task;
+        if(!task.success || task.error){
+            throw new Error(task.error + " " + task.message);
         }
         return await this.getImageStatus(task.messageId);
 
@@ -46,7 +46,9 @@ class MidJourney extends IImageLLM{
                         resolve(imageObj);
                     } else if(imageObj.status === "FAIL") {
                         clearInterval(intervalId);
-                        reject(imageObj.error);
+                        imageObj.message = imageObj.error;
+                        delete imageObj.error;
+                        reject(imageObj);
                     }
                 } catch (e) {
                     reject(e);
@@ -69,8 +71,8 @@ class MidJourney extends IImageLLM{
         };
         const response = await fetch(url, options);
         const task = await response.json();
-        if(!task.success){
-            return task;
+        if(!task.success || task.error){
+            throw new Error(task.error + " " + task.message);
         }
         return await this.getImageStatus(task.messageId);
     }
