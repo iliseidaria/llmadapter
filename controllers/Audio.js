@@ -21,9 +21,12 @@ async function textToSpeech(request, response){
             speed: 1,
         }),
     };
-
-    const result = await fetch(url, options);
-    result.body.pipe(response);
+    try {
+        const result = await fetch(url, options);
+        result.body.pipe(response);
+    } catch (e) {
+        throw new Error(e.message);
+    }
 }
 async function listVoicesAndEmotions(request, response){
     const url = 'https://api.play.ht/api/v2/voices';
