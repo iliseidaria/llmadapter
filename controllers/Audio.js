@@ -21,12 +21,17 @@ async function textToSpeech(request, response){
             speed: 1,
         }),
     };
-    try {
-        const result = await fetch(url, options);
-        result.body.pipe(response);
-    } catch (e) {
-        throw new Error(e.message);
+    const result = await fetch(url, options);
+    if(!result.ok) {
+        let jsonResponse = await result.json();
+        return Request.sendResponse(response, 500, 'application/json', {
+            success: false,
+            message: `${jsonResponse["error_id"]}: ${jsonResponse["error_message"]}`
+        });
     }
+
+    result.body.pipe(response);
+
 }
 async function listVoicesAndEmotions(request, response){
     const url = 'https://api.play.ht/api/v2/voices';
