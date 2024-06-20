@@ -17,6 +17,8 @@ async function textToSpeech(request, response){
             output_format: "mp3",
             sample_rate: "44100",
             emotion: request.body.emotion,
+            temperature: request.body.temperature || null,
+            voice_guidance: request.body.voiceGuidance || null,
             style_guidance: request.body.styleGuidance || 20,
             speed: 1,
         }),
@@ -45,7 +47,8 @@ async function listVoicesAndEmotions(request, response){
     };
     try {
         const result = await fetch(url, options);
-        const voices = await result.json();
+        let voices = await result.json();
+        voices = voices.filter(voice => voice.voice_engine === 'PlayHT2.0');
         let configs = {
             voices: voices,
             emotions: ['female_happy' ,
@@ -61,6 +64,7 @@ async function listVoicesAndEmotions(request, response){
                 'male_disgust' ,
                 'male_surprised']
         }
+
         Request.sendResponse(response, 200, 'application/json', {
             success: true,
             data: configs
