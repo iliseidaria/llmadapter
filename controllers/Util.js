@@ -1,4 +1,5 @@
 import * as Request from '../utils/request.js';
+import crypto from 'crypto';
 import { promises as fsPromises } from 'fs';
 async function getAuthRequirements(req, res) {
     try{
@@ -15,6 +16,17 @@ async function getAuthRequirements(req, res) {
     }
 
 }
+function generateRefWithSignature(secret) {
+    const timestamp = Date.now().toString();
+    const nonce = crypto.randomBytes(16).toString('hex');
+    const clientId = crypto.randomBytes(16).toString('hex');
+    const data = timestamp + nonce + secret;
+    let signature = crypto.createHmac('sha256', secret).update(data).digest('hex');
+    return { timestamp, nonce, signature, clientId };
+}
+const webhookURL="http://demo.assistos.net:9000/webhook/data";
 export{
-    getAuthRequirements
+    getAuthRequirements,
+    generateRefWithSignature,
+    webhookURL
 }

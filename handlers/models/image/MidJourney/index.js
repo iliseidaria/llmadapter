@@ -1,16 +1,18 @@
 import IImageLLM from "../../../interfaces/IImageLLM.js";
 import fetch from "node-fetch";
-
-
-class MidJourney extends IImageLLM{
-    constructor(APIKey,config) {
-        super(APIKey,config);
+import {generateRefWithSignature, webhookURL} from "../../../../controllers/Util.js";
+class MidJourney extends IImageLLM {
+    constructor(APIKey, config) {
+        super(APIKey, config);
         this.result = "";
     }
-    getModelName(){
+
+    getModelName() {
     }
-    async generateImage(prompt) {
+
+    async generateImage(prompt, configs) {
         const url = "https://api.mymidjourney.ai/api/v1/midjourney/imagine";
+        const refObj = generateRefWithSignature(configs.webhookSecret);
         const options = {
             method: "POST",
             headers: {
@@ -18,46 +20,23 @@ class MidJourney extends IImageLLM{
                 Authorization: `Bearer ${this.APIKey}`,
             },
             body: JSON.stringify({
-               prompt: prompt,
+                prompt: prompt,
+                webhookOverride: webhookURL,
+                ref: JSON.stringify(refObj),
             }),
         };
 
         const response = await fetch(url, options);
         const task = await response.json();
-        if(!task.success || task.error){
-            throw new Error(task.error + " " + task.message);
+        if (!task.success || task.error) {
+            throw new Error("API call: " + task.error + " " + task.message);
         }
-        return await this.getImageStatus(task.messageId);
-
+        task.clientId = refObj.clientId;
+        return task;
     };
-    getImageStatus(messageId){
-        return new Promise((resolve, reject) => {
-            const intervalId = setInterval(async () => {
-                try {
-                    const status = await fetch(`https://api.mymidjourney.ai/api/v1/midjourney/message/${messageId}`, {
-                        method: "GET",
-                        headers: {
-                            Authorization: `Bearer ${this.APIKey}`,
-                        },
-                    });
-                    const imageObj = await status.json();
-                    if (imageObj.status === "DONE") {
-                        clearInterval(intervalId);
-                        resolve(imageObj);
-                    } else if(imageObj.status === "FAIL") {
-                        clearInterval(intervalId);
-                        imageObj.message = imageObj.error;
-                        delete imageObj.error;
-                        reject(imageObj);
-                    }
-                } catch (e) {
-                    reject(e);
-                }
-            }, 5000);
-        });
-    }
-    async editImage(configs){
+    async editImage(configs) {
         const url = "https://api.mymidjourney.ai/api/v1/midjourney/button";
+        const refObj = generateRefWithSignature(configs.webhookSecret);
         const options = {
             method: "POST",
             headers: {
@@ -67,14 +46,18 @@ class MidJourney extends IImageLLM{
             body: JSON.stringify({
                 messageId: configs.messageId,
                 button: configs.action,
+                webhookOverride: webhookURL,
+                ref: JSON.stringify(refObj),
             }),
         };
         const response = await fetch(url, options);
         const task = await response.json();
-        if(!task.success || task.error){
-            throw new Error(task.error + " " + task.message);
+        if (!task.success || task.error) {
+            throw new Error("API call: " + task.error + " " + task.message);
         }
-        return await this.getImageStatus(task.messageId);
+        task.clientId = refObj.clientId;
+        return task;
     }
 }
+
 export default MidJourney;
