@@ -19,10 +19,9 @@ async function getAuthRequirements(req, res) {
 function generateRefWithSignature(secret) {
     const timestamp = Date.now().toString();
     const nonce = crypto.randomBytes(16).toString('hex');
-    const clientId = crypto.randomBytes(16).toString('hex');
     const data = timestamp + nonce + secret;
     let signature = crypto.createHmac('sha256', secret).update(data).digest('hex');
-    return { timestamp, nonce, signature, clientId };
+    return { timestamp, nonce, signature };
 }
 const webhookURL="http://demo.assistos.net:9000/webhook/data";
 export{

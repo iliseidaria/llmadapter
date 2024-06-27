@@ -13,6 +13,8 @@ class MidJourney extends IImageLLM {
     async generateImage(prompt, configs) {
         const url = "https://api.mymidjourney.ai/api/v1/midjourney/imagine";
         const refObj = generateRefWithSignature(configs.webhookSecret);
+        refObj.userId = configs.userId;
+        refObj.saveDataConfig = configs.saveDataConfig;
         const options = {
             method: "POST",
             headers: {
@@ -37,6 +39,8 @@ class MidJourney extends IImageLLM {
     async editImage(configs) {
         const url = "https://api.mymidjourney.ai/api/v1/midjourney/button";
         const refObj = generateRefWithSignature(configs.webhookSecret);
+        refObj.userId = configs.userId;
+        refObj.saveDataConfig = configs.saveDataConfig;
         const options = {
             method: "POST",
             headers: {
