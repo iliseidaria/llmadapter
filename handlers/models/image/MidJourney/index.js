@@ -45,7 +45,7 @@ class MidJourney extends IImageLLM {
     async editImage(configs) {
         const url = "https://api.mymidjourney.ai/api/v1/midjourney/button";
         const refObj = generateRefWithSignature(configs.webhookSecret);
-        refObj.objectId = configs.imageId;
+        refObj.objectId = `${configs.spaceId}_${generateId(8)}`;
         const options = {
             method: "POST",
             headers: {
