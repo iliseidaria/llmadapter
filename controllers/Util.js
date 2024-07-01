@@ -23,9 +23,13 @@ function generateRefWithSignature(secret) {
     let signature = crypto.createHmac('sha256', secret).update(data).digest('hex');
     return { timestamp, nonce, signature };
 }
+function generateId(length) {
+    return crypto.randomBytes(length).toString('hex');
+}
 const webhookURL="http://demo.assistos.net:9000/webhook/data";
 export{
     getAuthRequirements,
     generateRefWithSignature,
-    webhookURL
+    webhookURL,
+    generateId
 }
