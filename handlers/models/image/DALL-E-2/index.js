@@ -57,7 +57,7 @@ class DALLE2 extends IImageLLM {
             const refObj = generateRefWithSignature(configs.webhookSecret);
             refObj.userId = configs.userId;
             for (let i = 0; i < response.data.length; i++) {
-                refObj.imageId = imagesMetadata[i].id;
+                refObj.objectId = imagesMetadata[i].id;
                 fetch(webhookURL, {
                     method: "POST",
                     headers: {

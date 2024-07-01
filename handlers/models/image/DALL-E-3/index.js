@@ -56,15 +56,13 @@ class DALLE3 extends IImageLLM {
             }).then(async (response) => {
                 const refObj = generateRefWithSignature(configs.webhookSecret);
                 refObj.userId = configs.userId;
-                refObj.imageId = imageId;
+                refObj.objectId = imageId;
                 fetch(webhookURL, {
                     method: "POST",
                     headers: {
                         "content-type": "application/json",
                     },
                     body: JSON.stringify({
-                        imageId: imageId,
-                        response: response,
                         status: "DONE",
                         ref: JSON.stringify(refObj),
                         imageData: response.data[0].url || response.data[0].b64_json,

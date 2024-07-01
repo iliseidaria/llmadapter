@@ -13,7 +13,7 @@ class MidJourney extends IImageLLM {
     async generateImage(prompt, configs) {
         const url = "https://api.mymidjourney.ai/api/v1/midjourney/imagine";
         const refObj = generateRefWithSignature(configs.webhookSecret);
-        refObj.imageId = `${configs.spaceId}_${generateId(8)}`;
+        refObj.objectId = `${configs.spaceId}_${generateId(8)}`;
         refObj.userId = configs.userId;
         const options = {
             method: "POST",
@@ -33,13 +33,19 @@ class MidJourney extends IImageLLM {
         if (!task.success || task.error) {
             throw new Error("API call: " + task.error + " " + task.message);
         }
-        task.imageId = refObj.imageId;
-        return task;
+        return {
+            id: refObj.objectId,
+            userId: refObj.userId,
+            prompt: prompt,
+            createdAt: new Date().toISOString(),
+            messageId: task.messageId,
+            buttons: []
+        }
     };
     async editImage(configs) {
         const url = "https://api.mymidjourney.ai/api/v1/midjourney/button";
         const refObj = generateRefWithSignature(configs.webhookSecret);
-        refObj.imageId = configs.imageId;
+        refObj.objectId = configs.imageId;
         const options = {
             method: "POST",
             headers: {
@@ -58,8 +64,13 @@ class MidJourney extends IImageLLM {
         if (!task.success || task.error) {
             throw new Error("API call: " + task.error + " " + task.message);
         }
-        task.clientId = refObj.clientId;
-        return task;
+        return {
+            id: refObj.objectId,
+            userId: refObj.userId,
+            createdAt: new Date().toISOString(),
+            messageId: task.messageId,
+            buttons: []
+        }
     }
 }
 
