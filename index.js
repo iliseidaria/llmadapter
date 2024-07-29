@@ -33,7 +33,11 @@ class Server {
     }
 
     async handleRequest(req, res) {
-        await this.attachMiddlewares(req, res, this.middlewares, delegate);
+        try {
+            await this.attachMiddlewares(req, res, this.middlewares, delegate);
+        }catch(error){
+            console.log(error);
+        }
     }
 
     listen(port, callback) {
@@ -47,5 +51,19 @@ server.use(bodyReader);
 
 server.listen(serverConfig.PORT, () => {
     console.log(`Server running on http://localhost:${serverConfig.PORT}/`);
+});
+
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', {
+        message: err.message,
+        stack: err.stack
+    });
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Promise Rejection:', {
+        reason: reason,
+        promise: promise
+    });
 });
 

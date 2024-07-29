@@ -14,8 +14,8 @@ async function getAuthRequirements(req, res) {
             message: e.message
         });
     }
-
 }
+
 function generateRefWithSignature(secret) {
     const timestamp = Date.now().toString();
     const nonce = crypto.randomBytes(16).toString('hex');
