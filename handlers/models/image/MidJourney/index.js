@@ -46,6 +46,7 @@ class MidJourney extends IImageLLM {
         const url = "https://api.mymidjourney.ai/api/v1/midjourney/button";
         const refObj = generateRefWithSignature(configs.webhookSecret);
         refObj.objectId = `${configs.spaceId}_${generateId(8)}`;
+        refObj.userId = configs.userId;
         const options = {
             method: "POST",
             headers: {
