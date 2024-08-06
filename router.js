@@ -8,7 +8,8 @@ import * as Util from './controllers/Util.js';
 
 const routes = {
     'GET': {
-        '/apis/v1/authRequirements': Util.getAuthRequirements
+        '/apis/v1/authRequirements': Util.getAuthRequirements,
+        '/apis/v1/audio/listEmotions': Audio.listEmotions
     },
     'POST': {
         '/apis/v1/text/generate': Text.getTextResponse,
@@ -18,7 +19,7 @@ const routes = {
         '/apis/v1/image/variants': Image.generateImageVariants,
         '/apis/v1/video/generate': Video.generateVideo,
         '/apis/v1/audio/generate': Audio.textToSpeech,
-        '/apis/v1/audio/listVoicesAndEmotions': Audio.listVoicesAndEmotions
+        '/apis/v1/audio/listVoices': Audio.listVoices
     },
     'PUT': {},
 };
