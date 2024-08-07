@@ -55,7 +55,7 @@ async function listVoices(request, response){
     try {
         const result = await fetch(url, options);
         let voices = await result.json();
-        if(!voices.ok){
+        if(!result.ok){
             return Request.sendResponse(response, voices.status || 500, 'application/json', {
                 success: false,
                 message: createErrorMessage(result.status, voices)
