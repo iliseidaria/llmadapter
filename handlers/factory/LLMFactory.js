@@ -11,34 +11,18 @@ const Mixins = {
 };
 
 const LLMs = {
-    "GPT-3.5-Turbo": {
-        instance: (await import('../models/text/GPT-3.5-Turbo/index.js')).default
-    },
-    "GPT-4": {
-        instance: (await import('../models/text/GPT-4/index.js')).default,
-    },
-    "GPT-4-Turbo": {
-        instance: (await import('../models/text/GPT-4-Turbo/index.js')).default,
+    "PlayHT2.0": {
+        instance:(await import('../models/audio/PlayHT/index.js')).default
     },
     "GPT-4o": {
         instance: (await import('../models/text/GPT-4o/index.js')).default,
         defaultMixins: ['openAI_Text'],
-
     },
     "DALL-E-3": {
         instance: (await import('../models/image/DALL-E-3/index.js')).default,
     },
     "DALL-E-2": {
         instance: (await import('../models/image/DALL-E-2/index.js')).default,
-    },
-    "Claude-3": {
-        instance: (await import('../models/text/Claude-3/index.js')).default,
-    },
-    "Claude-2": {
-        instance: (await import('../models/text/Claude-2/index.js')).default,
-    },
-    "Gemini": {
-        instance: (await import('../models/text/Gemini/index.js')).default,
     },
     "MidJourney": {
         instance: (await import('../models/image/MidJourney/index.js')).default,
