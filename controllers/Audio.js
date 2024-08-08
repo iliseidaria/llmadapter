@@ -7,19 +7,18 @@ function createErrorMessage(status, jsonResponse){
     }
     return `${jsonResponse["error_id"]}: ${errorMessage}`;
 }
-async function textToSpeech(request, response){
-    const url = "https://api.play.ht/api/v2/tts/stream";
+async function generateLongAudio(request, clientResponse, prompt) {
     const options = {
         method: "POST",
         headers: {
-            accept: "audio/mpeg",
+            accept: "text/event-stream",
             "content-type": "application/json",
             AUTHORIZATION: request.body.APIKey,
             "X-USER-ID": request.body.userId,
         },
         body: JSON.stringify({
             voice_engine: 'PlayHT2.0',
-            text: request.body.prompt,
+            text: prompt,
             voice: request.body.voice,
             output_format: "mp3",
             sample_rate: "44100",
@@ -30,17 +29,40 @@ async function textToSpeech(request, response){
             speed: 1,
         }),
     };
-    const result = await fetch(url, options);
-    if(!result.ok) {
-        let jsonResponse = await result.json();
-        return Request.sendResponse(response, 500, 'application/json', {
-            success: false,
-            message: createErrorMessage(result.status, jsonResponse)
-        });
+
+    const eventStreamUrl = "https://api.play.ht/api/v2/tts";
+    let response = await fetch(eventStreamUrl, options);
+    let text = await response.text();
+    let events = text.split('\r\n\r\n');
+    let completedEvent = events[events.length - 2];
+    let parts = completedEvent.split('\r\n');
+    if(parts[0].startsWith("event:")){
+        let data = parts[1].replace("data: ", "");
+        let jsonData = JSON.parse(data);
+        let audioResponse = await fetch(jsonData.url);
+        if(!audioResponse.ok){
+            let jsonData = await audioResponse.json();
+            throw new Error(createErrorMessage(audioResponse.status, jsonData));
+        }
+        return await audioResponse.arrayBuffer();
+    } else {
+        throw new Error("Failed to generate audio");
     }
 
-    result.body.pipe(response);
-
+}
+async function textToSpeech(request, response){
+    let prompt = request.body.prompt;
+    if(prompt.length > 2000){
+        return Request.sendResponse(response, 400, 'application/json', {
+            success: false,
+            message: "Text is too long. Maximum length is 2000 characters"
+        });
+    }
+    let arrayBuffer = await generateLongAudio(request, response, prompt);
+    const audioBuffer = Buffer.from(arrayBuffer);
+    response.setHeader('Content-Type', 'audio/mpeg');
+    response.setHeader('Content-Length', audioBuffer.length);
+    response.end(audioBuffer);
 }
 async function listVoices(request, response){
     const url = 'https://api.play.ht/api/v2/voices';
@@ -55,7 +77,7 @@ async function listVoices(request, response){
     try {
         const result = await fetch(url, options);
         let voices = await result.json();
-        if(!voices.ok){
+        if(!result.ok){
             return Request.sendResponse(response, voices.status || 500, 'application/json', {
                 success: false,
                 message: createErrorMessage(result.status, voices)
