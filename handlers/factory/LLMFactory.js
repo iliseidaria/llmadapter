@@ -11,9 +11,7 @@ const Mixins = {
 };
 
 const LLMs = {
-    "PlayHT2.0": {
-        instance:(await import('../models/audio/PlayHT/index.js')).default
-    },
+    "PlayHT2.0": (await import('../models/audio/PlayHT/index.js')),
     "GPT-4o": {
         instance: (await import('../models/text/GPT-4o/index.js')).default,
         defaultMixins: ['openAI_Text'],
@@ -45,6 +43,7 @@ class LLMFactory {
         config = Object.keys(config).length ? config : (LLMClass.instance.defaultConfig || {});
 
         const instance = new LLMClass.instance(APIKey, config);
+        instance.throttler = LLMClass.throttler;
         for (const mixin of allMixins) {
             const mixinFunction = Mixins[mixin];
             if (!mixinFunction) {

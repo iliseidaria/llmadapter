@@ -1,5 +1,9 @@
 import IAudioLLM from "../../../interfaces/IAudioLLM.js";
 import fetch from "node-fetch";
+import Throttler from "../../../../utils/Throttler.js";
+import fsPromises from "fs/promises";
+import path from "path";
+import { fileURLToPath } from 'url';
 class PlayHT extends IAudioLLM {
     constructor(APIKey, config) {
         super(APIKey, config);
@@ -39,11 +43,6 @@ class PlayHT extends IAudioLLM {
                 speed: 1,
             }),
         };
-        // let errorData = {
-        //     status: 429,
-        //     message: "too many requests"
-        // }
-        // throw new Error(JSON.stringify(errorData));
         const eventStreamUrl = "https://api.play.ht/api/v2/tts";
         let response;
         try {
@@ -87,7 +86,15 @@ class PlayHT extends IAudioLLM {
             throw new Error(JSON.stringify(errorData));
         }
     }
-
+    async getMockAudio(){
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+        await sleep(3000);
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = path.dirname(__filename);
+        let audioPath = path.join(__dirname, 'audio.mp3');
+        let audio = await fsPromises.readFile(audioPath);
+        return audio;
+    }
     async textToSpeech(configs) {
         if (configs.prompt > 2000) {
             let errorData = {
@@ -96,7 +103,11 @@ class PlayHT extends IAudioLLM {
             }
             throw new Error(JSON.stringify(errorData));
         }
-        return await this.generateAudio(configs);
+        const generateAudioTask = async () => {
+            //return await this.getMockAudio(configs);
+            return await this.generateAudio(configs);
+        }
+        return await this.throttler.addTask(generateAudioTask);
     }
 
     async listVoices(configs) {
@@ -145,5 +156,5 @@ class PlayHT extends IAudioLLM {
             'male_surprised'];
     }
 }
-
-export default PlayHT;
+const playHTThrottler = new Throttler(10, 60000);
+export {PlayHT as instance, playHTThrottler as throttler};
