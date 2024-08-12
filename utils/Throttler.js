@@ -9,6 +9,7 @@ class Throttler {
     async addTask(executeFN) {
         return new Promise((resolve, reject) => {
             this.queue.push({ executeFN, resolve, reject });
+            console.log("pushed to queue");
             this.runNext();
         });
     }
@@ -20,6 +21,7 @@ class Throttler {
             try {
                 const result = await executeFN();
                 resolve(result);
+                console.log("resolved");
             } catch (error) {
                 reject(error);
             } finally {
