@@ -19,7 +19,9 @@ const routes = {
         '/apis/v1/video/generate': Video.generateVideo,
         '/apis/v1/audio/generate': Audio.textToSpeech,
         '/apis/v1/audio/listVoices': Audio.listVoices,
-        '/apis/v1/audio/listEmotions': Audio.listEmotions
+        '/apis/v1/audio/listEmotions': Audio.listEmotions,
+        '/apis/v1/video/lipsync': Video.lipsync
+
     },
     'PUT': {},
 };
