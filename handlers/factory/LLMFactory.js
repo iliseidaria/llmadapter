@@ -12,6 +12,7 @@ const Mixins = {
 
 const LLMs = {
     "PlayHT2.0": (await import('../models/audio/PlayHT/index.js')),
+    "SYNC160": (await import('../models/video/SYNC160/index.js')),
     "GPT-4o": {
         instance: (await import('../models/text/GPT-4o/index.js')).default,
         defaultMixins: ['openAI_Text'],

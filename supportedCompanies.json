@@ -112,6 +112,22 @@
             }
 
         ]
+    },
+    {
+        "company": "SyncLabs",
+        "authentication": [
+            "APIKey"
+        ],
+        "models": [
+            {
+                "name": "sync-1.6.0",
+                "type": "video"
+            },
+            {
+                "name": "sync-1.5.0",
+                "type": "video"
+            }
+        ]
     }
 ]
 

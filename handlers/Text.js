@@ -1,18 +1,22 @@
-import * as TextWrapper from './wrappers/TextWrapper.js';
+import LLMFactory from "./factory/LLMFactory.js";
 
 async function getTextResponse(APIKey, modelName, prompt, modelConfig, messagesQueue) {
     if (messagesQueue && messagesQueue.length > 0) {
-        return await TextWrapper.getTextConversationResponse(APIKey, modelName, prompt, modelConfig, messagesQueue);
+        const modelInstance = await LLMFactory.createLLM(modelName, APIKey,modelConfig);
+        return await modelInstance.getTextConversationResponse(prompt, messagesQueue,modelConfig);
     } else {
-        return await TextWrapper.getTextResponse(APIKey, modelName, prompt, modelConfig);
+        const modelInstance = await LLMFactory.createLLM(modelName, APIKey,modelConfig);
+        return await modelInstance.getTextResponse(prompt,modelConfig);
     }
 }
 
 async function getTextStreamingResponse(APIKey, modelName, prompt, modelConfig, messagesQueue, streamEmitter) {
     if (messagesQueue && messagesQueue.length > 0) {
-        return await TextWrapper.getTextConversationStreamingResponse(APIKey, modelName, prompt, modelConfig, messagesQueue, streamEmitter);
+        const modelInstance = await LLMFactory.createLLM(modelName, APIKey, modelConfig);
+        return await modelInstance.getTextConversationStreamingResponse(prompt,messagesQueue,streamEmitter);
     } else {
-        return await TextWrapper.getTextStreamingResponse(APIKey, modelName, prompt, modelConfig, streamEmitter);
+        const modelInstance = await  LLMFactory.createLLM(modelName, APIKey, modelConfig);
+        return await modelInstance.getTextStreamingResponse(prompt,streamEmitter);
     }
 }
 
