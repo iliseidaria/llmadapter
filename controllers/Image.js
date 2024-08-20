@@ -40,8 +40,8 @@ async function generateImage(request, response) {
         });
     }
 }
-async function generateImageVariants(request, response) {
-    try {
+        async function generateImageVariants(request, response) {
+            try {
         Request.sendResponse(response, 200, "application/json", {
             success: true,
             data: modelResponse
