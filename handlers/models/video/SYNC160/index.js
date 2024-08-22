@@ -15,7 +15,7 @@ class SYNC160 extends IVideoLLM {
 
     async lipsync() {
         const refObj = generateRefWithSignature(this.config.webhookSecret);
-        refObj.objectId = `${this.config.spaceId}_${generateId(8)}`;
+        refObj.objectId = `${this.config.spaceId}_${this.config.videoId}`;
         refObj.userId = this.config.userId;
         refObj.type = "video";
 
@@ -39,7 +39,8 @@ class SYNC160 extends IVideoLLM {
         });
         if (response.ok) {
             const data = await response.json();
-            return data.id
+            //return data.id
+            return refObj.objectId
         } else {
             const errorText = await response.text();
             throw new Error(errorText);
