@@ -1,8 +1,9 @@
 import IVideoLLM from "../../../interfaces/IVideoLLM.js";
 import {generateId, generateRefWithSignature, webhookURL} from "../../../../controllers/Util.js";
 import Throttler from "../../../../utils/Throttler.js";
+
 class SYNC160 extends IVideoLLM {
-    static modelName = "sync-1.6.0";
+    static modelName = "sync-1.7.1-beta";
 
     constructor(APIKey, config) {
         super(APIKey, config);
@@ -16,12 +17,12 @@ class SYNC160 extends IVideoLLM {
         const refObj = generateRefWithSignature(this.config.webhookSecret);
         refObj.objectId = `${this.config.spaceId}_${generateId(8)}`;
         refObj.userId = this.config.userId;
-        refObj.type="video";
+        refObj.type = "video";
 
-        const whURL= webhookURL+`?ref=${encodeURIComponent(JSON.stringify(refObj))}`;
+        const whURL = webhookURL + `?ref=${encodeURIComponent(JSON.stringify(refObj))}`;
         const requestBody = {
-            audioUrl: this.config.audioURL,
-            videoUrl: this.config.videoURL,
+            audioUrl: this.config.audioUrl,
+            videoUrl: this.config.videoUrl,
             synergize: true,
             webhookUrl: whURL,
             model: this.getModelName(),
@@ -36,7 +37,6 @@ class SYNC160 extends IVideoLLM {
             },
             body: JSON.stringify(requestBody)
         });
-
         if (response.ok) {
             const data = await response.json();
             return data.id
@@ -46,5 +46,6 @@ class SYNC160 extends IVideoLLM {
         }
     }
 }
+
 const SyncLabsHTThrottler = new Throttler(10, 6000);
 export {SYNC160 as instance, SyncLabsHTThrottler as throttler};
