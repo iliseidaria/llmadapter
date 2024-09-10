@@ -1,5 +1,7 @@
 import AWS from 'aws-sdk';
-import config from '../../config.json' assert { type: 'json' };
+import fsPromises from "fs/promises";
+const config =  await fsPromises.readFile('./config.json', 'utf-8').then(JSON.parse);
+
 
 const s3 = new AWS.S3({
     endpoint: config.S3_URL,

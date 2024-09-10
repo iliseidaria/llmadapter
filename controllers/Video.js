@@ -2,7 +2,8 @@ import * as Request from '../utils/request.js';
 import * as Video from "../handlers/Video.js";
 import * as Apihub from "../handlers/Apihub.js";
 import * as S3 from "../handlers/utils/S3Storage.js";
-import config from '../config.json' assert { type: 'json' };
+const config =  await fsPromises.readFile('./config.json', 'utf-8').then(JSON.parse);
+import fsPromises from "fs/promises";
 function getRandomName() {
     return Math.random().toString(36).substring(7);
 }

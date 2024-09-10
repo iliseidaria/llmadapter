@@ -104,8 +104,8 @@ class PlayHT extends IAudioLLM {
             throw new Error(JSON.stringify(errorData));
         }
         const generateAudioTask = async () => {
-            //return await this.getMockAudio(configs);
-            return await this.generateAudio(configs);
+            return await this.getMockAudio(configs);
+            //return await this.generateAudio(configs);
         }
         return await this.throttler.addTask(generateAudioTask);
     }

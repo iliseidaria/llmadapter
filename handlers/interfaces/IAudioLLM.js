@@ -15,7 +15,7 @@ class IAudioLLM{
             error.statusCode = 400
             throw error
         }
-        if(APIKey===undefined){
+        if(!APIKey){
             if(config.method === "listEmotions"){
                 this.config=config;
                 return;

@@ -1,4 +1,5 @@
-import config from '../config.json' assert { type: 'json' };
+import fsPromises from "fs/promises";
+const config =  await fsPromises.readFile('./config.json', 'utf-8').then(JSON.parse);
 
 async function getVideo(spaceId, videoId) {
     const response = await fetch(`${config.APIHUB_URL}/spaces/video/${spaceId}/${videoId}`, {
