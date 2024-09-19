@@ -14,10 +14,11 @@ class SYNC160 extends IVideoLLM {
     }
 
     async lipsync() {
-        const refObj = generateRefWithSignature(this.config.webhookSecret);
+        const refObj = generateRefWithSignature(this.config.webHookData.webhookSecret);
         refObj.objectId = `${this.config.spaceId}_${this.config.videoId}`;
         refObj.userId = this.config.userId;
         refObj.type = "video";
+        refObj.taskId=this.config.webHookData.taskId;
 
         const whURL = webhookURL + `?ref=${encodeURIComponent(JSON.stringify(refObj))}`;
         const requestBody = {

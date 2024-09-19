@@ -1,5 +1,5 @@
 {
   "PORT": 8079,
   "APIHUB_URL": "http://localhost:8080",
-  "S3_URL": "http://demo.assistos.net:8000"
+  "S3_URL": "https://fra1.digitaloceanspaces.com"
 }

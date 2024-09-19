@@ -1,14 +1,18 @@
 import AWS from 'aws-sdk';
+import env from 'dotenv';
 import fsPromises from "fs/promises";
 const config =  await fsPromises.readFile('./config.json', 'utf-8').then(JSON.parse);
 
+env.config()
 
 const s3 = new AWS.S3({
     endpoint: config.S3_URL,
-    accessKeyId: 'accessKey1',
-    secretAccessKey: 'verySecretKey1',
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     s3ForcePathStyle: true,
 });
+
+const devBucket=process.env.DEV_BUCKET;
 
 async function createBucket(bucketName) {
     const params = {
@@ -20,7 +24,6 @@ async function createBucket(bucketName) {
             if (error) {
                 return reject(error);
             } else {
-                // Aplica politica publică după crearea bucket-ului
                 try {
                     const publicPolicy = getPublicBucketPolicy(bucketName);
                     await putBucketPolicy(bucketName, publicPolicy);
@@ -91,7 +94,7 @@ async function putObject(bucketName, key, fileContent) {
         Key: key,
         Body: fileContent,
     };
-    await ensureBucketExists(bucketName);
+
     return new Promise((resolve, reject) => {
         s3.putObject(params, (error, data) => {
             if (error) {
@@ -258,6 +261,7 @@ export {
     getBucketPolicy,
     deleteBucketPolicy,
     putObjectAcl,
-    deleteBucket
+    deleteBucket,
+    devBucket
 };
 
