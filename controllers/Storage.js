@@ -1,39 +1,40 @@
 import * as Request from '../utils/request.js';
 import * as Storage from '../handlers/S3.js';
 
-async function insertRecord(spaceId, tableId, objectId, objectData) {
+async function insertRecord(req,res) {
 }
-async function updateRecord(spaceId, tableId, objectId, objectData) {
+async function updateRecord(req,res) {
 }
-async function deleteRecord(spaceId, tableId, objectId) {
+async function deleteRecord(req,res) {
 }
-async function getRecord(spaceId, tableId, objectId) {
+async function getRecord(req,res) {
 }
-async function getAllRecords(spaceId, objectId) {
+async function getAllRecords(req,res) {
 }
-async function getImage(spaceId, imageId) {
+
+async function getImage(req,res) {
 }
-async function getAudio(spaceId, audioId) {
+async function getAudio(req,res) {
 }
-async function getVideo(spaceId, videoId) {
+async function getVideo(req,res) {
 }
-async function getImageStream(spaceId, imageId) {
+async function getImageStream(req,res) {
 }
-async function getAudioStream(spaceId, audioId) {
+async function getAudioStream(req,res) {
 }
-async function getVideoStream(spaceId, videoId) {
+async function getVideoStream(req,res) {
 }
-async function storeImage(spaceId, imageId, imageData) {
+async function storeImage(req,res) {
 }
-async function storeAudio(spaceId, audioId, audioData) {
+async function storeAudio(req,res) {
 }
-async function storeVideo(spaceId, videoId, videoData) {
+async function storeVideo(req,res) {
 }
-async function deleteImage(spaceId, imageId) {
+async function deleteImage(req,res) {
 }
-async function deleteAudio(spaceId, audioId) {
+async function deleteAudio(req,res) {
 }
-async function deleteVideo(spaceId, videoId) {
+async function deleteVideo(req,res) {
 }
 
 export {
