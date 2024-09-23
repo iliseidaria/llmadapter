@@ -26,8 +26,6 @@ async function lipsync(request, response) {
         request.body.videoUrl=`${config.S3_URL}/${S3.devBucket}/${videoName}`;
         request.body.audioUrl=`${config.S3_URL}/${S3.devBucket}/${audioName}`;
 
-        //  request.body.videoUrl="https://synchlabs-public.s3.us-west-2.amazonaws.com/david_demo_shortvid-03a10044-7741-4cfc-816a-5bccd392d1ee.mp4"
-        //  request.body.audioUrl="https://synchlabs-public.s3.us-west-2.amazonaws.com/david_demo_shortaud-27623a4f-edab-4c6a-8383-871b18961a4a.wav"
         const videoURL = await Video.lipsync(APIKey, modelName, request.body);
         Request.sendResponse(response, 200, "application/json", {
             success: true,
