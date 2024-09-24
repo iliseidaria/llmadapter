@@ -88,11 +88,12 @@ async function ensureBucketExists(bucketName) {
     await createBucket(bucketName);
 }
 
-async function putObject(bucketName, key, fileContent) {
+async function putObject(bucketName, key, fileContent,contentType) {
     const params = {
         Bucket: bucketName,
         Key: key,
         Body: fileContent,
+        ContentType: contentType,
     };
 
     return new Promise((resolve, reject) => {
