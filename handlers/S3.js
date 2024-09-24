@@ -117,7 +117,7 @@ async function getObject(bucketName, key) {
             if (error) {
                 return reject(error);
             } else {
-                return resolve(data.Body.toString('utf-8'));
+                return resolve(data.Body);
             }
         });
     });

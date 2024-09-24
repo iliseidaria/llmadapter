@@ -58,24 +58,6 @@ async function sendFileToClient(response, resource, fileType) {
     }
 }
 
-function sendResponse(response, statusCode, contentType, message, cookies) {
-    response.statusCode = statusCode;
-    response.setHeader("Content-Type", contentType);
-
-    switch (contentType) {
-        case 'application/json':
-            message = JSON.stringify(message);
-            break;
-    }
-    if (cookies) {
-        const cookiesArray = Array.isArray(cookies) ? cookies : [cookies];
-        response.setHeader('Set-Cookie', cookiesArray);
-    }
-
-    response.write(message);
-    response.end();
-}
-
 function setCacheControl(response, options = {}) {
     let cacheControl = options.private ? 'private' : 'public';
 
@@ -107,11 +89,30 @@ function extractParams(request) {
     }
     return params;
 }
+function sendResponse(response, statusCode, contentType, message, cookies, ...headers) {
+    response.statusCode = statusCode;
+    response.setHeader("Content-Type", contentType);
+    headers.forEach(header => {
+        response.setHeader(header.key, header.value);
+    });
 
+    switch (contentType) {
+        case 'application/json':
+            message = JSON.stringify(message);
+            break;
+    }
+    if (cookies) {
+        const cookiesArray = Array.isArray(cookies) ? cookies : [cookies];
+        response.setHeader('Set-Cookie', cookiesArray);
+    }
+
+    response.write(message);
+    response.end();
+}
 export {
     extractQueryParams,
     sendFileToClient,
     setCacheControl,
-    sendResponse,
-    extractParams
+    extractParams,
+    sendResponse
 };
