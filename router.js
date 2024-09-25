@@ -42,6 +42,11 @@ const routes = {
         '/apis/v1/image': Storage.deleteImage,
         '/apis/v1/audio': Storage.deleteAudio,
         '/apis/v1/video': Storage.deleteVideo,
+    },
+    'HEAD': {
+        '/apis/v1/image': Storage.headImage,
+        '/apis/v1/audio': Storage.headAudio,
+        '/apis/v1/video': Storage.headVideo,
     }
 };
 

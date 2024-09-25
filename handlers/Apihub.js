@@ -5,7 +5,7 @@ async function getVideo(spaceId, videoId) {
     const response = await fetch(`${config.APIHUB_URL}/spaces/video/${spaceId}/${videoId}`, {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/octet-stream'
         }
     });
 
@@ -22,7 +22,7 @@ async function getAudio(spaceId, audioId) {
     const response = await fetch(`${config.APIHUB_URL}/spaces/audio/${spaceId}/${audioId}`, {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/octet-stream'
         }
     });
 

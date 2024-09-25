@@ -25,7 +25,6 @@ async function lipsync(request, response) {
         await S3.putObject(S3.devBucket, videoName, videoBuffer);
         request.body.videoUrl=`${config.S3_URL}/${S3.devBucket}/${videoName}`;
         request.body.audioUrl=`${config.S3_URL}/${S3.devBucket}/${audioName}`;
-
         const videoURL = await Video.lipsync(APIKey, modelName, request.body);
         Request.sendResponse(response, 200, "application/json", {
             success: true,

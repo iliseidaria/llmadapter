@@ -87,7 +87,22 @@ async function ensureBucketExists(bucketName) {
     }
     await createBucket(bucketName);
 }
+async function headObject(bucketName, key) {
+    const params = {
+        Bucket: bucketName,
+        Key: key,
+    };
 
+    return new Promise((resolve, reject) => {
+        s3.headObject(params, (error, data) => {
+            if (error) {
+                return reject(error);
+            } else {
+                return resolve(data);
+            }
+        });
+    });
+}
 async function putObject(bucketName, key, fileContent,contentType) {
     const params = {
         Bucket: bucketName,
@@ -263,6 +278,7 @@ export {
     deleteBucketPolicy,
     putObjectAcl,
     deleteBucket,
+    headObject,
     devBucket
 };
 

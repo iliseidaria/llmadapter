@@ -1,8 +1,6 @@
 import * as Storage from '../handlers/S3.js';
 import * as Request from '../utils/request.js'
-import fs from 'fs';
-import path from 'path';
-import {fileURLToPath} from "url";
+
 
 async function insertRecord(req, res) {
 }
@@ -173,6 +171,12 @@ async function deleteVideo(req, res) {
     }
 }
 
+async function headImage(req, res) {
+}
+async function headAudio(req, res) {
+}
+async function headVideo(req, res) {
+}
 export {
     insertRecord,
     updateRecord,
@@ -190,5 +194,8 @@ export {
     storeVideo,
     deleteImage,
     deleteAudio,
-    deleteVideo
+    deleteVideo,
+    headImage,
+    headAudio,
+    headVideo
 }
