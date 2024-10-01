@@ -17,10 +17,10 @@ async function lipsync(request, response) {
 
     delete request.body.modelName;
     try {
-        const audioBuffer=await Apihub.getAudio(spaceId,audioId);
-        const videoBuffer=await Apihub.getVideo(spaceId,videoId);
-        const audioName=getRandomName()+".mp3";
-        const videoName=getRandomName()+".mp4";
+        const audioBuffer= await Apihub.getAudio(spaceId,audioId);
+        const videoBuffer= await Apihub.getVideo(spaceId,videoId);
+        const audioName= getRandomName()+".mp3";
+        const videoName= getRandomName()+".mp4";
         await S3.putObject(S3.devBucket, audioName, audioBuffer);
         await S3.putObject(S3.devBucket, videoName, videoBuffer);
         request.body.videoUrl=`${config.S3_URL}/${S3.devBucket}/${videoName}`;

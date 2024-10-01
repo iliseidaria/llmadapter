@@ -122,12 +122,14 @@ async function putObject(bucketName, key, fileContent,contentType) {
     });
 }
 
-async function getObject(bucketName, key) {
+async function getObject(bucketName, key, headers = {}) {
     const params = {
         Bucket: bucketName,
-        Key: key,
+        Key: key
     };
-
+    for(const key in headers){
+        params[key] = headers[key];
+    }
     return new Promise((resolve, reject) => {
         s3.getObject(params, (error, data) => {
             if (error) {
@@ -279,6 +281,7 @@ export {
     putObjectAcl,
     deleteBucket,
     headObject,
-    devBucket
+    devBucket,
+    s3
 };
 
