@@ -124,6 +124,25 @@ async function putObject(bucketName, key, fileContent, contentType) {
         });
     });
 }
+async function uploadObject(bucketName, key, fileContent, contentType) {
+    const params = {
+        Bucket: bucketName,
+        Key: key,
+        Body: fileContent,
+        ContentType: contentType,
+    };
+
+    return new Promise((resolve, reject) => {
+        s3.upload(params, (error, data) => {
+            if (error) {
+                return reject(error);
+            } else {
+                return resolve(data);
+            }
+        });
+    });
+}
+
 
 async function getUploadURL(bucketName, key, contentType, expiresInSeconds = 3600) {
     const params = {
@@ -303,6 +322,7 @@ export {
     createBucket,
     putObject,
     getObject,
+    uploadObject,
     getObjectStream,
     deleteObject,
     listObjects,
