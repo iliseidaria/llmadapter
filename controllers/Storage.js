@@ -50,11 +50,6 @@ async function getVideo(req, res) {
         let {fileName} = Request.extractQueryParams(req);
         fileName += ".mp4";
         let range = req.headers.range;
-        const parts = range.replace(/bytes=/, "").split("-");
-        const start = parseInt(parts[0], 10);
-        const DEFAULT_CHUNK_SIZE = 10 * 1024 * 1024; // 10 MB
-        const end = parts[1] ? parseInt(parts[1], 10) : start + DEFAULT_CHUNK_SIZE - 1;
-        const chunkSize = (end - start) + 1;
 
         const s3Response = await Storage.s3.getObject({
             Bucket: Storage.devBucket,
@@ -64,7 +59,7 @@ async function getVideo(req, res) {
         const head = {
             'Content-Range': s3Response.ContentRange,
             'Accept-Ranges': 'bytes',
-            'Content-Length': chunkSize,
+            'Content-Length': s3Response.ContentLength,
             'Content-Type': s3Response.ContentType || 'video/mp4',
         };
         res.writeHead(206, head);
