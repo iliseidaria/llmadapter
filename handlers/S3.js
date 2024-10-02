@@ -1,7 +1,8 @@
 import AWS from 'aws-sdk';
 import env from 'dotenv';
 import fsPromises from "fs/promises";
-const config =  await fsPromises.readFile('./config.json', 'utf-8').then(JSON.parse);
+
+const config = await fsPromises.readFile('./config.json', 'utf-8').then(JSON.parse);
 
 env.config()
 
@@ -12,7 +13,7 @@ const s3 = new AWS.S3({
     s3ForcePathStyle: true,
 });
 
-const devBucket=process.env.DEV_BUCKET;
+const devBucket = process.env.DEV_BUCKET;
 
 async function createBucket(bucketName) {
     const params = {
@@ -87,6 +88,7 @@ async function ensureBucketExists(bucketName) {
     }
     await createBucket(bucketName);
 }
+
 async function headObject(bucketName, key) {
     const params = {
         Bucket: bucketName,
@@ -103,7 +105,8 @@ async function headObject(bucketName, key) {
         });
     });
 }
-async function putObject(bucketName, key, fileContent,contentType) {
+
+async function putObject(bucketName, key, fileContent, contentType) {
     const params = {
         Bucket: bucketName,
         Key: key,
@@ -122,12 +125,38 @@ async function putObject(bucketName, key, fileContent,contentType) {
     });
 }
 
+async function getUploadURL(bucketName, key, contentType, expiresInSeconds = 3600) {
+    const params = {
+        Bucket: bucketName,
+        Key: key,
+        ContentType: contentType,
+        Expires: expiresInSeconds,
+    };
+
+    return new Promise((resolve, reject) => {
+        s3.getSignedUrl('putObject', params, (error, url) => {
+            if (error) {
+                return reject(error);
+            } else {
+                return resolve(url);
+            }
+        });
+    });
+}
+async function getObjectStream(bucketName, key) {
+    const params = {
+        Bucket: bucketName,
+        Key: key
+    };
+    return s3.getObject(params).createReadStream();
+}
+
 async function getObject(bucketName, key, headers = {}) {
     const params = {
         Bucket: bucketName,
         Key: key
     };
-    for(const key in headers){
+    for (const key in headers) {
         params[key] = headers[key];
     }
     return new Promise((resolve, reject) => {
@@ -223,6 +252,7 @@ async function putObjectAcl(bucketName, key, acl) {
         });
     });
 }
+
 async function emptyBucket(bucketName) {
     const listParams = {
         Bucket: bucketName,
@@ -234,11 +264,11 @@ async function emptyBucket(bucketName) {
 
     const deleteParams = {
         Bucket: bucketName,
-        Delete: { Objects: [] }
+        Delete: {Objects: []}
     };
 
-    listedObjects.Contents.forEach(({ Key }) => {
-        deleteParams.Delete.Objects.push({ Key });
+    listedObjects.Contents.forEach(({Key}) => {
+        deleteParams.Delete.Objects.push({Key});
     });
 
     await s3.deleteObjects(deleteParams).promise();
@@ -273,6 +303,7 @@ export {
     createBucket,
     putObject,
     getObject,
+    getObjectStream,
     deleteObject,
     listObjects,
     putBucketPolicy,
@@ -281,6 +312,7 @@ export {
     putObjectAcl,
     deleteBucket,
     headObject,
+    getUploadURL,
     devBucket,
     s3
 };

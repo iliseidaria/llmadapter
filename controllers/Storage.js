@@ -1,6 +1,50 @@
 import * as Storage from '../handlers/S3.js';
 import * as Request from '../utils/request.js'
 
+const fileTypes = Object.freeze({
+    audios: {
+        contentType: "audio/mp3",
+        extension: "mp3"
+    },
+    images: {
+        contentType: "image/png",
+        extension: "png"
+    },
+    videos: {
+        contentType: "video/mp4",
+        extension: "mp4"
+    }
+});
+
+async function getUploadURL(req, res) {
+    try {
+        const {spaceId, uploadType, fileId} = Request.extractQueryParams(req);
+        if (!spaceId || !uploadType || !fileId) {
+            return Request.sendResponse(res, 400, "application/json", {
+                message: "Missing required parameters" + `:${spaceId ? "" : " spaceId"}${uploadType ? "" : " uploadType"}${fileId ? "" : " fileId"}`,
+                success: false
+            });
+        }
+        if (!Object.keys(fileTypes).includes(uploadType)) {
+            return Request.sendResponse(res, 400, "application/json", {
+                message: "Invalid upload type",
+                success: false
+            });
+        }
+        const objectPath = `${spaceId}/${uploadType}/${fileId}` + `.${fileTypes[uploadType].extension}`;
+        const uploadURL = await Storage.getUploadURL(Storage.devBucket, objectPath, fileTypes[uploadType].contentType);
+        Request.sendResponse(res, 200, "application/json", {
+            message: "Upload URL generated successfully",
+            success: true,
+            data: uploadURL
+        })
+    } catch (error) {
+        return Request.sendResponse(res, error.statusCode || 500, "application/json", {
+            message: "Failed to get upload URL" + error.message,
+            success: false
+        });
+    }
+}
 
 async function insertRecord(req, res) {
 }
@@ -78,13 +122,47 @@ async function getVideo(req, res) {
 }
 
 async function getImageStream(req, res) {
+    let {fileName} = Request.extractQueryParams(req);
+    fileName += ".png";
+    try {
+        const stream = Storage.getObjectStream(Storage.devBucket, fileName);
+        stream.pipe(res);
+    } catch (error) {
+        return Request.sendResponse(res, error.statusCode || 500, "application/json", {
+            message: "Failed to retrieve image stream" + error.message,
+            success: false
+        });
+    }
 }
 
 async function getAudioStream(req, res) {
+    let {fileName} = Request.extractQueryParams(req);
+    fileName += ".mp3";
+    try {
+        const stream = Storage.getObjectStream(Storage.devBucket, fileName);
+        stream.pipe(res);
+    } catch (error) {
+        return Request.sendResponse(res, error.statusCode || 500, "application/json", {
+            message: "Failed to retrieve Audio stream" + error.message,
+            success: false
+        });
+    }
 }
 
 async function getVideoStream(req, res) {
+    let {fileName} = Request.extractQueryParams(req);
+    fileName += ".mp4";
+    try {
+        const stream = Storage.getObjectStream(Storage.devBucket, fileName);
+        stream.pipe(res);
+    } catch (error) {
+        return Request.sendResponse(res, error.statusCode || 500, "application/json", {
+            message: "Failed to retrieve Video stream" + error.message,
+            success: false
+        });
+    }
 }
+
 
 async function storeImage(req, res) {
     try {
@@ -191,11 +269,15 @@ async function deleteVideo(req, res) {
 
 async function headImage(req, res) {
 }
+
 async function headAudio(req, res) {
 }
+
 async function headVideo(req, res) {
 }
+
 export {
+    getUploadURL,
     insertRecord,
     updateRecord,
     deleteRecord,

@@ -18,6 +18,7 @@ const routes = {
         '/apis/v1/image/stream': Storage.getImageStream,
         '/apis/v1/audio/stream': Storage.getAudioStream,
         '/apis/v1/video/stream': Storage.getVideoStream,
+        '/apis/v1/uploads': Storage.getUploadURL,
     },
     'POST': {
         '/apis/v1/text/generate': Text.getTextResponse,
