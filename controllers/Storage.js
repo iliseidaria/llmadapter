@@ -16,6 +16,30 @@ const fileTypes = Object.freeze({
     }
 });
 
+async function getDownloadURL(req, res) {
+    try {
+        const {spaceId, downloadType, fileId} = Request.extractQueryParams(req);
+        if (!spaceId || !downloadType || !fileId) {
+            return Request.sendResponse(res, 400, "application/json", {
+                message: "Missing required parameters" + `:${spaceId ? "" : " spaceId"}${downloadType ? "" : " downloadType"}${fileId ? "" : " fileId"}`,
+                success: false
+            });
+        }
+        const objectPath = `${spaceId}/${downloadType}/${fileId}` + `.${fileTypes[downloadType].extension}`;
+        const downloadURL = await Storage.getDownloadURL(Storage.devBucket, objectPath);
+        Request.sendResponse(res, 200, "application/json", {
+            message: "Download URL generated successfully",
+            success: true,
+            data: downloadURL
+        });
+    } catch (error) {
+        return Request.sendResponse(res, error.statusCode || 500, "application/json", {
+            message: "Failed to get download URL" + error.message,
+            success: false
+        });
+    }
+}
+
 async function getUploadURL(req, res) {
     try {
         const {spaceId, uploadType, fileId} = Request.extractQueryParams(req);
@@ -120,7 +144,7 @@ async function getImageStream(req, res) {
     let {fileName} = Request.extractQueryParams(req);
     fileName += ".png";
     try {
-        const stream = Storage.getObjectStream(Storage.devBucket, fileName);
+        const stream = await Storage.getObjectStream(Storage.devBucket, fileName);
         stream.pipe(res);
     } catch (error) {
         return Request.sendResponse(res, error.statusCode || 500, "application/json", {
@@ -134,7 +158,7 @@ async function getAudioStream(req, res) {
     let {fileName} = Request.extractQueryParams(req);
     fileName += ".mp3";
     try {
-        const stream = Storage.getObjectStream(Storage.devBucket, fileName);
+        const stream = await Storage.getObjectStream(Storage.devBucket, fileName);
         stream.pipe(res);
     } catch (error) {
         return Request.sendResponse(res, error.statusCode || 500, "application/json", {
@@ -148,7 +172,13 @@ async function getVideoStream(req, res) {
     let {fileName} = Request.extractQueryParams(req);
     fileName += ".mp4";
     try {
-        const stream = Storage.getObjectStream(Storage.devBucket, fileName);
+        const stream = await Storage.getObjectStream(Storage.devBucket, fileName);
+        const head = {
+            'Content-Range': s3Response.ContentRange,
+            'Accept-Ranges': 'bytes',
+            'Content-Length': s3Response.ContentLength,
+            'Content-Type': s3Response.ContentType || 'video/mp4',
+        };
         stream.pipe(res);
     } catch (error) {
         return Request.sendResponse(res, error.statusCode || 500, "application/json", {
@@ -262,13 +292,16 @@ async function deleteVideo(req, res) {
 
 async function headImage(req, res) {
 }
+
 async function headAudio(req, res) {
 }
+
 async function headVideo(req, res) {
 }
 
 export {
     getUploadURL,
+    getDownloadURL,
     insertRecord,
     updateRecord,
     deleteRecord,

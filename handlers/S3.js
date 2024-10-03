@@ -11,6 +11,8 @@ const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     s3ForcePathStyle: true,
+    region:'fra1',
+    signatureVersion: 'v2'
 });
 
 const devBucket = process.env.DEV_BUCKET;
@@ -124,6 +126,7 @@ async function putObject(bucketName, key, fileContent, contentType) {
         });
     });
 }
+
 async function uploadObject(bucketName, key, fileContent, contentType) {
     const params = {
         Bucket: bucketName,
@@ -143,13 +146,30 @@ async function uploadObject(bucketName, key, fileContent, contentType) {
     });
 }
 
+async function getDownloadURL(bucketName, key, expiresInSeconds = 500) {
+    const params = {
+        Bucket: bucketName,
+        Key: key,
+        Expires:  Math.floor(Date.now() / 1000) + expiresInSeconds
+    };
 
-async function getUploadURL(bucketName, key, contentType, expiresInSeconds = 3600) {
+    return new Promise((resolve, reject) => {
+        s3.getSignedUrl('getObject', params, (error, url) => {
+            if (error) {
+                return reject(error);
+            } else {
+                return resolve(url);
+            }
+        });
+    });
+}
+
+async function getUploadURL(bucketName, key, contentType, expiresInSeconds = 500) {
     const params = {
         Bucket: bucketName,
         Key: key,
         ContentType: contentType,
-        Expires: expiresInSeconds,
+        Expires: Math.floor(Date.now() / 1000) + expiresInSeconds
     };
 
     return new Promise((resolve, reject) => {
@@ -162,6 +182,7 @@ async function getUploadURL(bucketName, key, contentType, expiresInSeconds = 360
         });
     });
 }
+
 async function getObjectStream(bucketName, key) {
     const params = {
         Bucket: bucketName,
@@ -333,6 +354,7 @@ export {
     deleteBucket,
     headObject,
     getUploadURL,
+    getDownloadURL,
     devBucket,
     s3
 };
