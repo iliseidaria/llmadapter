@@ -183,33 +183,23 @@ async function getUploadURL(bucketName, key, contentType, expiresInSeconds = 500
     });
 }
 
-async function getObjectStream(bucketName, key) {
-    const params = {
-        Bucket: bucketName,
-        Key: key
-    };
-    return s3.getObject(params).createReadStream();
-}
-
 async function getObject(bucketName, key, headers = {}) {
     const params = {
         Bucket: bucketName,
-        Key: key
+        Key: key,
+        ...headers
     };
-    for (const key in headers) {
-        params[key] = headers[key];
-    }
-    return new Promise((resolve, reject) => {
-        s3.getObject(params, (error, data) => {
-            if (error) {
-                return reject(error);
-            } else {
-                return resolve(data.Body);
-            }
-        });
-    });
-}
 
+    const metadata = await s3.headObject(params).promise();
+    const stream = s3.getObject(params).createReadStream();
+
+    return {
+        Body: stream,
+        ContentLength: metadata.ContentLength,
+        ContentType: metadata.ContentType,
+        ContentRange: headers.Range || null,
+    };
+}
 async function deleteObject(bucketName, key) {
     const params = {
         Bucket: bucketName,
@@ -344,7 +334,6 @@ export {
     putObject,
     getObject,
     uploadObject,
-    getObjectStream,
     deleteObject,
     listObjects,
     putBucketPolicy,

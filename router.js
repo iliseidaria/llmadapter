@@ -10,14 +10,9 @@ import * as Storage from './controllers/Storage.js';
 const routes = {
     'GET': {
         '/apis/v1/authRequirements': Util.getAuthRequirements,
-        '/apis/v1/record': Storage.getRecord,
-        '/apis/v1/records': Storage.getAllRecords,
         '/apis/v1/image': Storage.getImage,
         '/apis/v1/audio': Storage.getAudio,
         '/apis/v1/video': Storage.getVideo,
-        '/apis/v1/image/stream': Storage.getImageStream,
-        '/apis/v1/audio/stream': Storage.getAudioStream,
-        '/apis/v1/video/stream': Storage.getVideoStream,
         '/apis/v1/uploads': Storage.getUploadURL,
         '/apis/v1/downloads': Storage.getDownloadURL,
     },
@@ -31,16 +26,13 @@ const routes = {
         '/apis/v1/audio/listVoices': Audio.listVoices,
         '/apis/v1/audio/listEmotions': Audio.listEmotions,
         '/apis/v1/video/lipsync': Video.lipsync,
-        '/apis/v1/record': Storage.insertRecord,
         '/apis/v1/image': Storage.storeImage,
         '/apis/v1/audio': Storage.storeAudio,
         '/apis/v1/video': Storage.storeVideo,
     },
     'PUT': {
-        '/apis/v1/record': Storage.updateRecord
     },
     'DELETE': {
-        '/apis/v1/record': Storage.deleteRecord,
         '/apis/v1/image': Storage.deleteImage,
         '/apis/v1/audio': Storage.deleteAudio,
         '/apis/v1/video': Storage.deleteVideo,
