@@ -89,23 +89,29 @@ async function getS3File(req, res, fileExtension) {
     const rangeHeader = req.headers.range;
     const headers = rangeHeader ? {Range: rangeHeader} : {};
 
+    const startRangeRequest=rangeHeader?rangeHeader.split('=')[1].split('-')[0]:0;
+
     const S3Response = await Storage.getObject(Storage.devBucket, fileName, headers);
 
-    const fileSize = S3Response.ContentLength;
+    const fileSize = S3Response.ContentLength+parseInt(startRangeRequest);
 
     if (rangeHeader) {
-        const defaultChunkSize = 1024 * 1024 * 3
         const parts = rangeHeader.replace(/bytes=/, "").split("-");
         const start = parseInt(parts[0], 10);
-        const end = parts[1] ? parseInt(parts[1], 10) : start + defaultChunkSize;
-        const validEnd = Math.min(end, fileSize - 1);
+        const end = parts[1] ? parseInt(parts[1], 10) : fileSize-1;
+
         const head = {
             'Accept-Ranges': 'bytes',
-            'Content-Range': `bytes ${start}-${validEnd}/${fileSize}`,
-            'Content-Length': validEnd - start + 1,
+            'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+            'Content-Length': end - start + 1,
             'Content-Type': S3Response.ContentType,
+            'cache-control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': 0,
         };
-
+      /*  if (end !== fileSize - 1) {
+            head['Transfer-Encoding'] = 'chunked';
+        }*/
         res.writeHead(206, head);
         S3Response.Body.pipe(res);
     } else {
