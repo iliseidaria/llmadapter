@@ -77,7 +77,7 @@ async function getUploadURL(req, res) {
 }
 
 async function getS3File(req, res, fileExtension) {
-    let { fileName } = Request.extractQueryParams(req);
+    let {fileName} = Request.extractQueryParams(req);
     if (!fileName) {
         return Request.sendResponse(res, 400, "application/json", {
             message: "Missing required parameters" + `:${fileName ? "" : " fileName"}`,
@@ -87,22 +87,22 @@ async function getS3File(req, res, fileExtension) {
     fileName += `.${fileExtension}`;
 
     const rangeHeader = req.headers.range;
-    const headers = rangeHeader ? { Range: rangeHeader } : {};
+    const headers = rangeHeader ? {Range: rangeHeader} : {};
 
     const S3Response = await Storage.getObject(Storage.devBucket, fileName, headers);
 
     const fileSize = S3Response.ContentLength;
 
     if (rangeHeader) {
-        const [startStr, endStr] = rangeHeader.replace(/bytes=/, "").split("-");
-        const start = parseInt(startStr, 10);
-        const end = endStr ? parseInt(endStr, 10) : fileSize - 1;
-        const chunkSize = (end - start) + 1;
-
+        const defaultChunkSize = 1024 * 1024 * 3
+        const parts = rangeHeader.replace(/bytes=/, "").split("-");
+        const start = parseInt(parts[0], 10);
+        const end = parts[1] ? parseInt(parts[1], 10) : start + defaultChunkSize;
+        const validEnd = Math.min(end, fileSize - 1);
         const head = {
             'Accept-Ranges': 'bytes',
-            'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-            'Content-Length': chunkSize,
+            'Content-Range': `bytes ${start}-${validEnd}/${fileSize}`,
+            'Content-Length': validEnd - start + 1,
             'Content-Type': S3Response.ContentType,
         };
 
