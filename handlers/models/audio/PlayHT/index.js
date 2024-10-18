@@ -37,8 +37,6 @@ class PlayHT extends IAudioLLM {
                 output_format: "mp3",
                 sample_rate: "44100",
                 emotion: configs.emotion,
-                temperature: configs.temperature || null,
-                voice_guidance: configs.voiceGuidance || null,
                 style_guidance: configs.styleGuidance || 20,
                 speed: 1,
             }),

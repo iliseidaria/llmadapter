@@ -2,7 +2,7 @@ import fsPromises from "fs/promises";
 const config =  await fsPromises.readFile('./config.json', 'utf-8').then(JSON.parse);
 
 async function getVideo(spaceId, videoId) {
-    const response = await fetch(`${config.APIHUB_URL}/spaces/video/${spaceId}/${videoId}`, {
+    const response = await fetch(`${config.APIHUB_URL}/spaces/videos/${spaceId}/${videoId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/octet-stream'
@@ -19,7 +19,7 @@ async function getVideo(spaceId, videoId) {
 }
 
 async function getAudio(spaceId, audioId) {
-    const response = await fetch(`${config.APIHUB_URL}/spaces/audio/${spaceId}/${audioId}`, {
+    const response = await fetch(`${config.APIHUB_URL}/spaces/audios/${spaceId}/${audioId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/octet-stream'
