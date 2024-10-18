@@ -1,6 +1,7 @@
 import AWS from 'aws-sdk';
 import env from 'dotenv';
 import fsPromises from "fs/promises";
+import * as Request from "../utils/request.js";
 
 const config = await fsPromises.readFile('./config.json', 'utf-8').then(JSON.parse);
 
@@ -14,8 +15,6 @@ const s3 = new AWS.S3({
     region:'fra1',
     signatureVersion: 'v2'
 });
-
-const devBucket = process.env.DEV_BUCKET;
 
 async function createBucket(bucketName) {
     const params = {
@@ -171,7 +170,7 @@ async function getUploadURL(bucketName, key, contentType, expiresInSeconds = 500
         ContentType: contentType,
         Expires: Math.floor(Date.now() / 1000) + expiresInSeconds
     };
-
+    //await renameFiles(bucketName);
     return new Promise((resolve, reject) => {
         s3.getSignedUrl('putObject', params, (error, url) => {
             if (error) {
@@ -328,6 +327,48 @@ async function deleteBucket(bucketName) {
     }
 }
 
+
+async function renameFiles(bucketName) {
+    try {
+        let continuationToken; // For pagination
+        do {
+            const params = { Bucket: bucketName, ContinuationToken: continuationToken };
+            const objects = await s3.listObjectsV2(params).promise();
+
+            // Process files in batches
+            const batchPromises = objects.Contents.map(async (object) => {
+                const originalKey = object.Key;
+                const extension = originalKey.split('.').pop(); // Get file extension
+                let fileId;
+
+                // Extract fileId based on key format
+                if (originalKey.includes('/')) {
+                    fileId = originalKey.split('/').pop().split('.')[0]; // Get last segment before extension
+                } else {
+                    fileId = originalKey.split('.')[0]; // Directly get fileID
+                }
+
+                const newKey = `${fileId}.${extension}`;
+
+                // Copy the object to the new key
+                // await s3.copyObject({
+                //     Bucket: bucketName,
+                //     CopySource: `${bucketName}/${originalKey}`,
+                //     Key: newKey
+                // }).promise();
+                //
+                // // Delete the original object
+                // await s3.deleteObject({ Bucket: bucketName, Key: originalKey }).promise();
+                // console.log(`Renamed ${originalKey} to ${newKey}`);
+            });
+            await Promise.all(batchPromises);
+            continuationToken = objects.IsTruncated ? objects.NextContinuationToken : null;
+        } while (continuationToken);
+
+    } catch (error) {
+        console.error('Error renaming files:', error);
+    }
+}
 export {
     listBuckets,
     createBucket,
@@ -343,8 +384,6 @@ export {
     deleteBucket,
     headObject,
     getUploadURL,
-    getDownloadURL,
-    devBucket,
-    s3
+    getDownloadURL
 };
 

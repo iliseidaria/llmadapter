@@ -10,9 +10,9 @@ import * as Storage from './controllers/Storage.js';
 const routes = {
     'GET': {
         '/apis/v1/authRequirements': Util.getAuthRequirements,
-        '/apis/v1/image': Storage.getImage,
-        '/apis/v1/audio': Storage.getAudio,
-        '/apis/v1/video': Storage.getVideo,
+        '/apis/v1/images': Storage.getImage,
+        '/apis/v1/audios': Storage.getAudio,
+        '/apis/v1/videos': Storage.getVideo,
         '/apis/v1/uploads': Storage.getUploadURL,
         '/apis/v1/downloads': Storage.getDownloadURL,
     },
@@ -26,21 +26,21 @@ const routes = {
         '/apis/v1/audio/listVoices': Audio.listVoices,
         '/apis/v1/audio/listEmotions': Audio.listEmotions,
         '/apis/v1/video/lipsync': Video.lipsync,
-        '/apis/v1/image': Storage.storeImage,
-        '/apis/v1/audio': Storage.storeAudio,
-        '/apis/v1/video': Storage.storeVideo,
     },
     'PUT': {
+        '/apis/v1/images': Storage.putImage,
+        '/apis/v1/audios': Storage.putAudio,
+        '/apis/v1/videos': Storage.putVideo,
     },
     'DELETE': {
-        '/apis/v1/image': Storage.deleteImage,
-        '/apis/v1/audio': Storage.deleteAudio,
-        '/apis/v1/video': Storage.deleteVideo,
+        '/apis/v1/images': Storage.deleteImage,
+        '/apis/v1/audios': Storage.deleteAudio,
+        '/apis/v1/videos': Storage.deleteVideo,
     },
     'HEAD': {
-        '/apis/v1/image': Storage.headImage,
-        '/apis/v1/audio': Storage.headAudio,
-        '/apis/v1/video': Storage.headVideo,
+        '/apis/v1/images': Storage.headImage,
+        '/apis/v1/audios': Storage.headAudio,
+        '/apis/v1/videos': Storage.headVideo,
     }
 };
 

@@ -1,6 +1,7 @@
-import * as Storage from '../handlers/S3.js';
+import * as s3 from '../handlers/S3.js';
 import * as Request from '../utils/request.js'
-
+import {getObject} from "../handlers/S3.js";
+const devBucket = process.env.DEV_BUCKET;
 const fileTypes = Object.freeze({
     audios: {
         contentType: "audio/mp3",
@@ -18,21 +19,21 @@ const fileTypes = Object.freeze({
 
 async function getDownloadURL(req, res) {
     try {
-        const {spaceId, downloadType, fileId} = Request.extractQueryParams(req);
-        if (!spaceId || !downloadType || !fileId) {
+        const {type, fileId} = Request.extractQueryParams(req);
+        if (!type || !fileId) {
             return Request.sendResponse(res, 400, "application/json", {
-                message: "Missing required parameters" + `:${spaceId ? "" : " spaceId"}${downloadType ? "" : " downloadType"}${fileId ? "" : " fileId"}`,
+                message: "Missing required parameters" + `:${type ? "" : " type"}${fileId ? "" : " fileId"}`,
                 success: false
             });
         }
-        if (!Object.keys(fileTypes).includes(downloadType)) {
+        if (!Object.keys(fileTypes).includes(type)) {
             return Request.sendResponse(res, 400, "application/json", {
                 message: "Invalid upload type",
                 success: false
             });
         }
-        const objectPath = `${spaceId}/${downloadType}/${fileId}` + `.${fileTypes[downloadType].extension}`;
-        const downloadURL = await Storage.getDownloadURL(Storage.devBucket, objectPath);
+        const objectPath = fileId + `.${fileTypes[type].extension}`;
+        const downloadURL = await s3.getDownloadURL(devBucket, objectPath);
         Request.sendResponse(res, 200, "application/json", {
             message: "Download URL generated successfully",
             success: true,
@@ -48,21 +49,21 @@ async function getDownloadURL(req, res) {
 
 async function getUploadURL(req, res) {
     try {
-        const {spaceId, uploadType, fileId} = Request.extractQueryParams(req);
-        if (!spaceId || !uploadType || !fileId) {
+        const {type, fileId} = Request.extractQueryParams(req);
+        if (!type || !fileId) {
             return Request.sendResponse(res, 400, "application/json", {
-                message: "Missing required parameters" + `:${spaceId ? "" : " spaceId"}${uploadType ? "" : " uploadType"}${fileId ? "" : " fileId"}`,
+                message: "Missing required parameters" + `:${type ? "" : " uploadType"}${fileId ? "" : " fileId"}`,
                 success: false
             });
         }
-        if (!Object.keys(fileTypes).includes(uploadType)) {
+        if (!Object.keys(fileTypes).includes(type)) {
             return Request.sendResponse(res, 400, "application/json", {
                 message: "Invalid upload type",
                 success: false
             });
         }
-        const objectPath = `${spaceId}/${uploadType}/${fileId}` + `.${fileTypes[uploadType].extension}`;
-        const uploadURL = await Storage.getUploadURL(Storage.devBucket, objectPath, fileTypes[uploadType].contentType);
+        const objectPath = fileId + `.${fileTypes[type].extension}`;
+        const uploadURL = await s3.getUploadURL(devBucket, objectPath, fileTypes[type].contentType);
         Request.sendResponse(res, 200, "application/json", {
             message: "Upload URL generated successfully",
             success: true,
@@ -89,11 +90,11 @@ async function getS3File(req, res, fileExtension) {
     const rangeHeader = req.headers.range;
     const headers = rangeHeader ? {Range: rangeHeader} : {};
 
-    const startRangeRequest=rangeHeader?rangeHeader.split('=')[1].split('-')[0]:0;
+    const startRangeRequest= rangeHeader ? rangeHeader.split('=')[1].split('-')[0]:0;
 
-    const S3Response = await Storage.getObject(Storage.devBucket, fileName, headers);
+    const S3Response = await s3.getObject(devBucket, fileName, headers);
 
-    const fileSize = S3Response.ContentLength+parseInt(startRangeRequest);
+    const fileSize = S3Response.ContentLength + parseInt(startRangeRequest);
 
     if (rangeHeader) {
         const parts = rangeHeader.replace(/bytes=/, "").split("-");
@@ -109,9 +110,9 @@ async function getS3File(req, res, fileExtension) {
             'Pragma': 'no-cache',
             'Expires': 0,
         };
-      /*  if (end !== fileSize - 1) {
-            head['Transfer-Encoding'] = 'chunked';
-        }*/
+        /*  if (end !== fileSize - 1) {
+              head['Transfer-Encoding'] = 'chunked';
+          }*/
         res.writeHead(206, head);
         S3Response.Body.pipe(res);
     } else {
@@ -125,7 +126,6 @@ async function getS3File(req, res, fileExtension) {
         S3Response.Body.pipe(res);
     }
 }
-
 
 async function getImage(req, res) {
     try {
@@ -160,12 +160,12 @@ async function getVideo(req, res) {
     }
 }
 
-async function storeImage(req, res) {
+async function putImage(req, res) {
     try {
         let {fileName} = Request.extractQueryParams(req);
         fileName += ".png";
         const data = req.body;
-        await Storage.uploadObject(Storage.devBucket, fileName, data, req.headers["content-type"]);
+        await s3.uploadObject(devBucket, fileName, data, "image/png");
         return Request.sendResponse(res, 200, "application/json", {
             message: "Image stored successfully",
             success: true
@@ -178,12 +178,12 @@ async function storeImage(req, res) {
     }
 }
 
-async function storeAudio(req, res) {
+async function putAudio(req, res) {
     try {
         let {fileName} = Request.extractQueryParams(req);
         fileName += ".mp3";
         const data = req.body;
-        await Storage.uploadObject(Storage.devBucket, fileName, data, req.headers["content-type"]);
+        await s3.uploadObject(devBucket, fileName, data, "audio/mp3");
         return Request.sendResponse(res, 200, "application/json", {
             message: "Audio stored successfully",
             success: true
@@ -196,12 +196,12 @@ async function storeAudio(req, res) {
     }
 }
 
-async function storeVideo(req, res) {
+async function putVideo(req, res) {
     try {
         let {fileName} = Request.extractQueryParams(req);
         fileName += ".mp4";
         const data = req.body;
-        await Storage.uploadObject(Storage.devBucket, fileName, data, req.headers["content-type"]);
+        await s3.uploadObject(devBucket, fileName, data, "video/mp4");
         return Request.sendResponse(res, 200, "application/json", {
             message: "Video stored successfully",
             success: true
@@ -217,7 +217,7 @@ async function storeVideo(req, res) {
 async function deleteImage(req, res) {
     try {
         let {fileName} = Request.extractQueryParams(req);
-        await Storage.deleteObject(Storage.devBucket, fileName);
+        await s3.deleteObject(devBucket, fileName);
         return Request.sendResponse(res, 200, "application/json", {
             message: "Image stored successfully",
             success: true
@@ -233,7 +233,7 @@ async function deleteImage(req, res) {
 async function deleteAudio(req, res) {
     try {
         let {fileName} = Request.extractQueryParams(req);
-        await Storage.deleteObject(Storage.devBucket, fileName);
+        await s3.deleteObject(devBucket, fileName);
         return Request.sendResponse(res, 200, "application/json", {
             message: "Audio stored successfully",
             success: true
@@ -249,7 +249,7 @@ async function deleteAudio(req, res) {
 async function deleteVideo(req, res) {
     try {
         let {fileName} = Request.extractQueryParams(req);
-        await Storage.deleteObject(Storage.devBucket, fileName);
+        await s3.deleteObject(devBucket, fileName);
         return Request.sendResponse(res, 200, "application/json", {
             message: "Video stored successfully",
             success: true
@@ -277,9 +277,9 @@ export {
     getImage,
     getAudio,
     getVideo,
-    storeImage,
-    storeAudio,
-    storeVideo,
+    putImage,
+    putAudio,
+    putVideo,
     deleteImage,
     deleteAudio,
     deleteVideo,
