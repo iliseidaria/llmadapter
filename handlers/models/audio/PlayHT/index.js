@@ -3,7 +3,8 @@ import fetch from "node-fetch";
 import Throttler from "../../../../utils/Throttler.js";
 import fsPromises from "fs/promises";
 import path from "path";
-import { fileURLToPath } from 'url';
+import {fileURLToPath} from 'url';
+
 class PlayHT extends IAudioLLM {
     constructor(APIKey, config) {
         super(APIKey, config);
@@ -43,7 +44,7 @@ class PlayHT extends IAudioLLM {
                 speed: 1,
             }),
         };
-        const eventStreamUrl = "https://api.play.ht/api/v2/tts";
+        const eventStreamUrl = "https://api.play.ht/api/v2/tts/stream";
         let response;
         try {
             response = await fetch(eventStreamUrl, options);
@@ -62,29 +63,7 @@ class PlayHT extends IAudioLLM {
             }
             throw new Error(JSON.stringify(errorData));
         }
-        let text = await response.text();
-        let events = text.split('\r\n\r\n');
-        let completedEvent = events[events.length - 2];
-        let parts = completedEvent.split('\r\n');
-        if (parts[0].startsWith("event:")) {
-            let data = parts[1].replace("data: ", "");
-            let jsonData = JSON.parse(data);
-            let audioResponse = await fetch(jsonData.url);
-            if (!audioResponse.ok) {
-                let errorData = {
-                    status: audioResponse.status,
-                    message: this.createErrorMessage(audioResponse.status, await response.json())
-                }
-                throw new Error(JSON.stringify(errorData));
-            }
-            return await audioResponse.arrayBuffer();
-        } else {
-            let errorData = {
-                status: 500,
-                message: "Failed to generate audio"
-            }
-            throw new Error(JSON.stringify(errorData));
-        }
+        return await response.arrayBuffer();
     }
     async getMockAudio(){
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
