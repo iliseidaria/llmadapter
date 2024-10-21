@@ -263,12 +263,57 @@ async function deleteVideo(req, res) {
 }
 
 async function headImage(req, res) {
+    try {
+        let {fileName} = Request.extractQueryParams(req);
+        fileName += ".png";
+        const head = await s3.headObject(devBucket, fileName);
+        res.setHeader("Content-Type", "image/png");
+        res.setHeader("Content-Length",head.ContentLength);
+        res.setHeader("Last-Modified", head.LastModified);
+        res.setHeader("Accept-Ranges", "bytes");
+        res.end();
+    } catch (error) {
+        return Request.sendResponse(res, error.statusCode || 500, "application/json", {
+            message: "Failed to get image metadata",
+            success: false
+        })
+    }
 }
 
 async function headAudio(req, res) {
+    try {
+        let {fileName} = Request.extractQueryParams(req);
+        fileName += ".mp3";
+        const head = await s3.headObject(devBucket, fileName);
+        res.setHeader("Content-Type", "image/png");
+        res.setHeader("Content-Length",head.ContentLength);
+        res.setHeader("Last-Modified", head.LastModified);
+        res.setHeader("Accept-Ranges", "bytes");
+        res.end();
+    } catch (error) {
+        return Request.sendResponse(res, error.statusCode || 500, "application/json", {
+            message: "Failed to get audio metadata",
+            success: false
+        })
+    }
 }
 
 async function headVideo(req, res) {
+    try {
+        let {fileName} = Request.extractQueryParams(req);
+        fileName += ".mp4";
+        const head = await s3.headObject(devBucket, fileName);
+        res.setHeader("Content-Type", "image/png");
+        res.setHeader("Content-Length",head.ContentLength);
+        res.setHeader("Last-Modified", head.LastModified);
+        res.setHeader("Accept-Ranges", "bytes");
+        res.end();
+    } catch (error) {
+        return Request.sendResponse(res, error.statusCode || 500, "application/json", {
+            message: "Failed to get video metadata",
+            success: false
+        })
+    }
 }
 
 export {
