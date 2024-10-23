@@ -330,5 +330,6 @@ export {
     deleteVideo,
     headImage,
     headAudio,
-    headVideo
+    headVideo,
+    devBucket
 }

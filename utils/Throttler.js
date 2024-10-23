@@ -1,9 +1,9 @@
 class Throttler {
     constructor(limit, interval) {
-        this.limit = limit;
-        this.interval = interval;
+        this.limit = limit; // Max number of tasks allowed per interval
+        this.interval = interval; // Time window in milliseconds
         this.queue = [];
-        this.activeTasks = 0;
+        this.taskTimestamps = []; // Track when tasks were executed
     }
 
     async addTask(executeFN) {
@@ -14,19 +14,28 @@ class Throttler {
     }
 
     async runNext() {
-        if (this.activeTasks < this.limit && this.queue.length > 0) {
+        const now = Date.now();
+
+        // Clean up old timestamps that are outside the interval window
+        this.taskTimestamps = this.taskTimestamps.filter(timestamp => now - timestamp < this.interval);
+
+        // Check if we can run a task (within the limit)
+        if (this.taskTimestamps.length < this.limit && this.queue.length > 0) {
             const { executeFN, resolve, reject } = this.queue.shift();
-            this.activeTasks++;
+            this.taskTimestamps.push(now); // Track when this task was executed
+
             try {
                 const result = await executeFN();
                 resolve(result);
             } catch (error) {
                 reject(error);
             } finally {
-                this.activeTasks--;
-                // Run the next task after a delay, based on the rate limit
-                setTimeout(() => this.runNext(), this.interval / this.limit);
+                this.runNext();
             }
+        } else if (this.queue.length > 0) {
+            // If limit exceeded, wait for the next available slot
+            const waitTime = this.interval - (now - this.taskTimestamps[0]);
+            setTimeout(() => this.runNext(), waitTime);
         }
     }
 }

@@ -170,7 +170,6 @@ async function getUploadURL(bucketName, key, contentType, expiresInSeconds = 500
         ContentType: contentType,
         Expires: Math.floor(Date.now() / 1000) + expiresInSeconds
     };
-    //await renameFiles(bucketName);
     return new Promise((resolve, reject) => {
         s3.getSignedUrl('putObject', params, (error, url) => {
             if (error) {
@@ -344,22 +343,17 @@ async function renameFiles(bucketName) {
                 // Extract fileId based on key format
                 if (originalKey.includes('/')) {
                     fileId = originalKey.split('/').pop().split('.')[0]; // Get last segment before extension
-                } else {
-                    fileId = originalKey.split('.')[0]; // Directly get fileID
+                    const newKey = `${fileId}.${extension}`;
+                    await s3.copyObject({
+                        Bucket: bucketName,
+                        CopySource: `${bucketName}/${originalKey}`,
+                        Key: newKey
+                    }).promise();
+
+                    // Delete the original object
+                    await s3.deleteObject({ Bucket: bucketName, Key: originalKey }).promise();
+                    console.log(`Renamed ${originalKey} to ${newKey}`);
                 }
-
-                const newKey = `${fileId}.${extension}`;
-
-                // Copy the object to the new key
-                // await s3.copyObject({
-                //     Bucket: bucketName,
-                //     CopySource: `${bucketName}/${originalKey}`,
-                //     Key: newKey
-                // }).promise();
-                //
-                // // Delete the original object
-                // await s3.deleteObject({ Bucket: bucketName, Key: originalKey }).promise();
-                // console.log(`Renamed ${originalKey} to ${newKey}`);
             });
             await Promise.all(batchPromises);
             continuationToken = objects.IsTruncated ? objects.NextContinuationToken : null;
