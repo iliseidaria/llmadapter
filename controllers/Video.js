@@ -2,7 +2,8 @@ import * as Request from '../utils/request.js';
 import * as Video from "../handlers/Video.js";
 import * as s3 from "../handlers/S3.js";
 import {devBucket} from "./Storage.js";
-
+import fsPromises from "fs/promises";
+const config =  await fsPromises.readFile('./config.json', 'utf-8').then(JSON.parse);
 async function lipsync(request, response) {
     const APIKey = request.body.APIKey;
     delete request.body.APIKey;
@@ -13,8 +14,8 @@ async function lipsync(request, response) {
     try {
         let videoPath = `${videoId}.mp4`;
         let audioPath = `${audioId}.mp3`;
-        request.body.videoUrl = await s3.getDownloadURL(devBucket, videoPath);
-        request.body.audioUrl = await s3.getDownloadURL(devBucket, audioPath);
+        request.body.videoUrl = `${config.S3_URL}/${devBucket}/${videoPath}`;
+        request.body.audioUrl = `${config.S3_URL}/${devBucket}/${audioPath}`;
         const videoURL = await Video.lipsync(APIKey, modelName, request.body);
         Request.sendResponse(response, 200, "application/json", {
             success: true,
