@@ -133,5 +133,5 @@ class PlayHT extends IAudioLLM {
             'male_surprised'];
     }
 }
-const playHTThrottler = new Throttler(10, 6000);
+const playHTThrottler = new Throttler(10, 60000);
 export {PlayHT as instance, playHTThrottler as throttler};
