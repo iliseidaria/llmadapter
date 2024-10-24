@@ -1,9 +1,9 @@
 import IVideoLLM from "../../../interfaces/IVideoLLM.js";
-import {generateId, generateRefWithSignature, webhookURL} from "../../../../controllers/Util.js";
+import {generateRefWithSignature, webhookURL} from "../../../../controllers/Util.js";
 import Throttler from "../../../../utils/Throttler.js";
 
 class SYNC160 extends IVideoLLM {
-    static modelName = "sync-1.7.1-beta";
+    static modelName = "sync-1.7.1";
 
     constructor(APIKey, config) {
         super(APIKey, config);
@@ -15,21 +15,27 @@ class SYNC160 extends IVideoLLM {
 
     async lipsync() {
         const refObj = generateRefWithSignature(this.config.webHookData.webhookSecret);
-        refObj.objectId = `${this.config.spaceId}_${this.config.videoId}`;
-        refObj.userId = this.config.userId;
         refObj.type = "video";
         refObj.taskId = this.config.webHookData.taskId;
 
         const whURL = webhookURL + `?ref=${encodeURIComponent(JSON.stringify(refObj))}`;
         const requestBody = {
-            audioUrl: this.config.audioUrl,
-            videoUrl: this.config.videoUrl,
-            synergize: true,
+            input:[{
+                type: "audio",
+                url: this.config.audioUrl
+            },
+            {
+                type: "video",
+                url: this.config.videoUrl
+            }],
+            fps: 24,
+            output_format: "mp4",
+            output_resolution: "1280x720",
             webhookUrl: whURL,
             model: this.getModelName(),
         };
 
-        const response = await fetch('https://api.synclabs.so/lipsync', {
+        const response = await fetch('https://api.sync.so/v2/generate', {
             method: 'POST',
             headers: {
                 accept: "application/json",
@@ -41,7 +47,7 @@ class SYNC160 extends IVideoLLM {
         if (response.ok) {
             const data = await response.json();
             //return data.id
-            return refObj.objectId
+            return refObj.objectId;
         } else {
             const errorText = await response.text();
             throw new Error(errorText);
