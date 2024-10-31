@@ -26,7 +26,7 @@ function generateRefWithSignature(secret) {
 function generateId(length) {
     return crypto.randomBytes(length).toString('hex');
 }
-const webhookURL="http://demo.assistos.net:9000/webhook/data";
+const webhookURL="http://demo.assistos.net:8080/webhook/data";
 export{
     getAuthRequirements,
     generateRefWithSignature,
