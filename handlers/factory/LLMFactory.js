@@ -17,6 +17,14 @@ const LLMs = {
         instance: (await import('../models/text/GPT-4o/index.js')).default,
         defaultMixins: ['openAI_Text'],
     },
+    "o1-preview": {
+        instance: (await import('../models/text/o1-preview/index.js')).default,
+        defaultMixins: ['openAI_Text'],
+    },
+    "o1-mini": {
+        instance: (await import('../models/text/o1-mini/index.js')).default,
+        defaultMixins: ['openAI_Text'],
+    },
     "DALL-E-3": {
         instance: (await import('../models/image/DALL-E-3/index.js')).default,
     },

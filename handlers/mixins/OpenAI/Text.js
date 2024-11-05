@@ -9,13 +9,17 @@ async function createOpenAIInstance(APIKey) {
 }
 
 function buildLLMRequestConfig(modelInstance, prompt, configs) {
-    const {variants, temperature, maxTokens, response_format} = configs;
+    const {variants, temperature, maxTokens, response_format, top_p, frequency_penalty, presence_penalty, stop} = configs;
     return {
         model: modelInstance.getModelName(),
         messages: prompt,
         ...(variants ? {n: variants} : {}),
-        ...(temperature ? {temperature} : {}),
+        ...(temperature !== undefined ? {temperature} : {}),
         ...(maxTokens ? {max_tokens: maxTokens} : {}),
+        ...(top_p !== undefined ? {top_p} : {}),
+        ...(frequency_penalty !== undefined ? {frequency_penalty} : {}),
+        ...(presence_penalty !== undefined ? {presence_penalty} : {}),
+        ...(stop ? {stop} : {}),
         ...(response_format === "json" ? {response_format: {"type": "json_object"}} : {})
     };
 }
