@@ -1,14 +1,14 @@
-import { HfInference } from "@huggingface/inference";
+import {HfInference} from "@huggingface/inference";
 
 function buildLLMRequestConfig(modelInstance, prompt, configs) {
-    const { temperature, maxTokens, top_p, stop } = configs;
+    const {temperature, maxTokens, top_p, stop} = configs;
     return {
         model: modelInstance.getModelName(),
-        messages: [{ role: 'user', content: prompt }],
-        ...(temperature !== undefined ? { temperature } : {}),
-        ...(maxTokens !== undefined ? { max_new_tokens: maxTokens } : {}),
-        ...(top_p !== undefined ? { top_p } : {}),
-        ...(stop !== undefined ? { stop } : {}),
+        messages: [{role: 'user', content: prompt}],
+        ...(temperature !== undefined ? {temperature} : {}),
+        ...(maxTokens !== undefined ? {max_new_tokens: maxTokens} : {max_new_tokes: 1000}),
+        ...(top_p !== undefined ? {top_p} : {}),
+        ...(stop !== undefined ? {stop} : {}),
     };
 }
 
@@ -31,30 +31,22 @@ export default async function (modelInstance) {
 
     async function executeStandardCompletion(modelInstance, prompt, configs) {
         const LLMRequestConfig = buildLLMRequestConfig(modelInstance, prompt, configs);
-
+        let response;
         try {
-            const response = await hf.chatCompletion({
+            response = await hf.chatCompletion({
                 ...LLMRequestConfig,
             });
-
-            const message = response.generated_text;
-            const messages = [message];
-            const metadata = response;
-
-            if (configs.response_format === "json") {
-                return {
-                    messages: [await ensureJSONResponseFormat(message, true)],
-                    metadata,
-                };
-            }
-
-            return { messages, metadata };
         } catch (error) {
-            throw new Error(`Error in executeStandardCompletion: ${error.message}`);
+             response = await hf.textGeneration({
+                ...LLMRequestConfig,
+            });
         }
-    }
+        const message = response.choices[0].message.content;
+        const metadata = response;
+        return {message, metadata};
+}
 
-    modelInstance.getTextResponse = function (prompt, configs = {}) {
-        return executeStandardCompletion(modelInstance, prompt, configs);
-    };
+modelInstance.getTextResponse = function (prompt, configs = {}) {
+    return executeStandardCompletion(modelInstance, prompt, configs);
+};
 }
