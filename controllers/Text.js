@@ -9,19 +9,16 @@ async function getTextResponse(req, res) {
     const { modelName, prompt, messagesQueue, modelConfig, APIKey } = req.body;
     if (!modelName || !prompt) {
         return Request.sendResponse(res, 400, "application/json", {
-            success: false,
             message: "Bad Request. Model name and prompt are required"
         });
     }
     try {
         const modelResponse = await Text.getTextResponse(APIKey,modelName, prompt, modelConfig, messagesQueue);
         Request.sendResponse(res, 200, "application/json", {
-            success: true,
             data: modelResponse
         });
     } catch (error) {
         Request.sendResponse(res, error.statusCode || 500, "application/json", {
-            success: false,
             message: error.message
         });
     }
@@ -34,7 +31,6 @@ async function getTextStreamingResponse(req, res) {
 
     if (!modelName || !prompt || !APIKey) {
         Request.sendResponse(res, 400, "application/json", {
-            success: false,
             message: "Bad Request. APIKey, modelName, and prompt are required"
         });
         return;
@@ -74,7 +70,7 @@ async function getTextStreamingResponse(req, res) {
 
     streamEmitter.on('error', error => {
         if (!res.writableEnded) {
-            res.write(`event: error\ndata: ${JSON.stringify({ success: false, message: error.message })}\n\n`);
+            res.write(`event: error\ndata: ${JSON.stringify({message: error.message })}\n\n`);
             res.end();
         }
         delete cache[sessionId];
@@ -84,7 +80,7 @@ async function getTextStreamingResponse(req, res) {
         await Text.getTextStreamingResponse(APIKey, modelName, prompt, modelConfig, messagesQueue, streamEmitter);
     } catch (error) {
         if (!res.writableEnded) {
-            res.write(`event: error\ndata: ${JSON.stringify({ success: false, message: error.message })}\n\n`);
+            res.write(`event: error\ndata: ${JSON.stringify({message: error.message })}\n\n`);
             res.end();
         }
         delete cache[sessionId];

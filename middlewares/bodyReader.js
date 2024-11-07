@@ -30,7 +30,7 @@ function bodyReader(req, res, next) {
                 } catch (error) {
                     res.statusCode = 400;
                     res.setHeader('Content-Type', 'application/json');
-                    res.end(JSON.stringify({success: false, message: 'Invalid JSON'}));
+                    res.end(JSON.stringify({message: 'Invalid JSON'}));
                     return;
                 }
             } else if (
@@ -50,7 +50,7 @@ function bodyReader(req, res, next) {
             console.error('Error reading body:', err);
             res.statusCode = 500;
             res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({success: false, message: 'Internal Server Error: ' + err}));
+            res.end(JSON.stringify({ message: 'Internal Server Error: ' + err}));
         });
     }
 }

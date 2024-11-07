@@ -23,26 +23,22 @@ async function getDownloadURL(req, res) {
         if (!type || !fileId) {
             return Request.sendResponse(res, 400, "application/json", {
                 message: "Missing required parameters" + `:${type ? "" : " type"}${fileId ? "" : " fileId"}`,
-                success: false
             });
         }
         if (!Object.keys(fileTypes).includes(type)) {
             return Request.sendResponse(res, 400, "application/json", {
                 message: "Invalid upload type",
-                success: false
             });
         }
         const objectPath = fileId + `.${fileTypes[type].extension}`;
         const downloadURL = await s3.getDownloadURL(devBucket, objectPath);
         Request.sendResponse(res, 200, "application/json", {
             message: "Download URL generated successfully",
-            success: true,
             data: downloadURL
         });
     } catch (error) {
         return Request.sendResponse(res, error.statusCode || 500, "application/json", {
             message: "Failed to get download URL:" + error.message,
-            success: false
         });
     }
 }
@@ -53,26 +49,22 @@ async function getUploadURL(req, res) {
         if (!type || !fileId) {
             return Request.sendResponse(res, 400, "application/json", {
                 message: "Missing required parameters" + `:${type ? "" : " uploadType"}${fileId ? "" : " fileId"}`,
-                success: false
             });
         }
         if (!Object.keys(fileTypes).includes(type)) {
             return Request.sendResponse(res, 400, "application/json", {
                 message: "Invalid upload type",
-                success: false
             });
         }
         const objectPath = fileId + `.${fileTypes[type].extension}`;
         const uploadURL = await s3.getUploadURL(devBucket, objectPath, fileTypes[type].contentType);
         Request.sendResponse(res, 200, "application/json", {
             message: "Upload URL generated successfully",
-            success: true,
             data: uploadURL
         })
     } catch (error) {
         return Request.sendResponse(res, error.statusCode || 500, "application/json", {
             message: "Failed to get upload URL" + error.message,
-            success: false
         });
     }
 }
@@ -82,7 +74,6 @@ async function getS3File(req, res, fileExtension) {
     if (!fileName) {
         return Request.sendResponse(res, 400, "application/json", {
             message: "Missing required parameters" + `:${fileName ? "" : " fileName"}`,
-            success: false
         });
     }
     fileName += `.${fileExtension}`;
@@ -132,8 +123,7 @@ async function getImage(req, res) {
         return await getS3File(req, res, "png");
     } catch (error) {
         return Request.sendResponse(res, error.statusCode || 500, "application/json", {
-            message: "Failed to retrieve image:" + error.message,
-            success: false
+            message: "Failed to retrieve image:" + error.message
         });
     }
 }
@@ -144,7 +134,6 @@ async function getAudio(req, res) {
     } catch (error) {
         return Request.sendResponse(res, error.statusCode || 500, "application/json", {
             message: "Failed to retrieve Audio:" + error.message,
-            success: false
         });
     }
 }
@@ -155,7 +144,6 @@ async function getVideo(req, res) {
     } catch (error) {
         return Request.sendResponse(res, error.statusCode || 500, "application/json", {
             message: "Failed to retrieve Video:" + error.message,
-            success: false
         });
     }
 }
@@ -168,12 +156,10 @@ async function putImage(req, res) {
         await s3.uploadObject(devBucket, fileName, data, "image/png");
         return Request.sendResponse(res, 200, "application/json", {
             message: "Image stored successfully",
-            success: true
         })
     } catch (error) {
         return Request.sendResponse(res, error.statusCode || 500, "application/json", {
             message: "Failed to store image",
-            success: false
         })
     }
 }
@@ -186,12 +172,10 @@ async function putAudio(req, res) {
         await s3.uploadObject(devBucket, fileName, data, "audio/mp3");
         return Request.sendResponse(res, 200, "application/json", {
             message: "Audio stored successfully",
-            success: true
         })
     } catch (error) {
         return Request.sendResponse(res, error.statusCode || 500, "application/json", {
             message: "Failed to store Audio",
-            success: false
         })
     }
 }
@@ -204,12 +188,10 @@ async function putVideo(req, res) {
         await s3.uploadObject(devBucket, fileName, data, "video/mp4");
         return Request.sendResponse(res, 200, "application/json", {
             message: "Video stored successfully",
-            success: true
         })
     } catch (error) {
         return Request.sendResponse(res, error.statusCode || 500, "application/json", {
             message: "Failed to store Video",
-            success: false
         })
     }
 }
@@ -220,12 +202,10 @@ async function deleteImage(req, res) {
         await s3.deleteObject(devBucket, fileName);
         return Request.sendResponse(res, 200, "application/json", {
             message: "Image stored successfully",
-            success: true
         })
     } catch (error) {
         return Request.sendResponse(res, error.statusCode || 500, "application/json", {
             message: "Failed to delete Image",
-            success: false
         })
     }
 }
@@ -236,12 +216,10 @@ async function deleteAudio(req, res) {
         await s3.deleteObject(devBucket, fileName);
         return Request.sendResponse(res, 200, "application/json", {
             message: "Audio stored successfully",
-            success: true
         })
     } catch (error) {
         return Request.sendResponse(res, error.statusCode || 500, "application/json", {
-            message: "Failed to delete Audio",
-            success: false
+            message: "Failed to delete Audio"
         })
     }
 }
@@ -251,13 +229,11 @@ async function deleteVideo(req, res) {
         let {fileName} = Request.extractQueryParams(req);
         await s3.deleteObject(devBucket, fileName);
         return Request.sendResponse(res, 200, "application/json", {
-            message: "Video stored successfully",
-            success: true
+            message: "Video stored successfully"
         })
     } catch (error) {
         return Request.sendResponse(res, error.statusCode || 500, "application/json", {
-            message: "Failed to delete Video",
-            success: false
+            message: "Failed to delete Video"
         })
     }
 }
@@ -274,8 +250,7 @@ async function headImage(req, res) {
         res.end();
     } catch (error) {
         return Request.sendResponse(res, error.statusCode || 500, "application/json", {
-            message: "Failed to get image metadata",
-            success: false
+            message: "Failed to get image metadata"
         })
     }
 }
@@ -292,8 +267,7 @@ async function headAudio(req, res) {
         res.end();
     } catch (error) {
         return Request.sendResponse(res, error.statusCode || 500, "application/json", {
-            message: "Failed to get audio metadata",
-            success: false
+            message: "Failed to get audio metadata"
         })
     }
 }
@@ -310,8 +284,7 @@ async function headVideo(req, res) {
         res.end();
     } catch (error) {
         return Request.sendResponse(res, error.statusCode || 500, "application/json", {
-            message: "Failed to get video metadata",
-            success: false
+            message: "Failed to get video metadata"
         })
     }
 }

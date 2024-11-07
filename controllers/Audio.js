@@ -13,7 +13,6 @@ async function textToSpeech(request, response) {
         response.end(audioBuffer);
     } catch (error) {
         Request.sendResponse(response, error.statusCode || 500, "application/json", {
-            success: false,
             message: error.message
         });
     }
@@ -26,12 +25,10 @@ async function listVoices(request, response) {
         delete request.body.modelName;
         const modelResponse = await Audio.listVoices(APIKey, modelName, request.body);
         Request.sendResponse(response, 200, "application/json", {
-            success: true,
             data: modelResponse
         });
     } catch (error) {
         Request.sendResponse(response, error.statusCode || 500, "application/json", {
-            success: false,
             message: error.message
         });
     }
@@ -42,12 +39,10 @@ async function listEmotions(request, response) {
         delete request.body.modelName;
         const modelResponse = await Audio.listEmotions(modelName, request.body);
         Request.sendResponse(response, 200, "application/json", {
-            success: true,
             data: modelResponse
         });
     } catch (error) {
         Request.sendResponse(response, error.statusCode || 500, "application/json", {
-            success: false,
             message: error.message
         });
     }

@@ -77,7 +77,6 @@ async function delegate(req, res) {
         await matchedRoute.handler(req, res);
     } else {
         Request.sendResponse(res, 404, 'application/json', {
-            success: false,
             message: 'Invalid route'
         });
     }

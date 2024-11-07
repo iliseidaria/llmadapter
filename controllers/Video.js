@@ -1,6 +1,5 @@
 import * as Request from '../utils/request.js';
 import * as Video from "../handlers/Video.js";
-import * as s3 from "../handlers/S3.js";
 import {devBucket} from "./Storage.js";
 import fsPromises from "fs/promises";
 const config =  await fsPromises.readFile('./config.json', 'utf-8').then(JSON.parse);
@@ -18,12 +17,10 @@ async function lipsync(request, response) {
         request.body.audioUrl = `${config.S3_URL}/${devBucket}/${audioPath}`;
         const videoURL = await Video.lipsync(APIKey, modelName, request.body);
         Request.sendResponse(response, 200, "application/json", {
-            success: true,
             data: videoURL
         });
     } catch (error) {
         Request.sendResponse(response, error.statusCode || 500, "application/json", {
-            success: false,
             message: error.message
         });
 
