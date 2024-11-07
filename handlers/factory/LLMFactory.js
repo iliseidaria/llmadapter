@@ -1,20 +1,35 @@
 import  OpenAITextMixin from '../mixins/OpenAI/Text.js';
 import  OpenAIImageMixin from '../mixins/OpenAI/Image.js';
+import  QwenTextMixin from '../mixins/Qwen/Text.js';
+
 // import * as AnthropicMixin from '../mixins/Anthropic/anthropic.js';
 // import * as GoogleMixin from '../mixins/Google/google.js';
-
 const Mixins = {
     openAI_Text: OpenAITextMixin,
     openAI_Image: OpenAIImageMixin,
     // anthropic: AnthropicMixin,
     // google: GoogleMixin,
+    qwen_Text: QwenTextMixin
 };
 
 const LLMs = {
     "PlayHT2.0": (await import('../models/audio/PlayHT/index.js')),
     "sync-1.6.0": (await import('../models/video/SYNC160/index.js')),
+    "Qwen": {
+        instance: (await import('../models/text/Qwen/index.js')).default,
+        defaultMixins: ['qwen_Text'],
+    },
+
     "GPT-4o": {
         instance: (await import('../models/text/GPT-4o/index.js')).default,
+        defaultMixins: ['openAI_Text'],
+    },
+    "o1-preview": {
+        instance: (await import('../models/text/o1-preview/index.js')).default,
+        defaultMixins: ['openAI_Text'],
+    },
+    "o1-mini": {
+        instance: (await import('../models/text/o1-mini/index.js')).default,
         defaultMixins: ['openAI_Text'],
     },
     "DALL-E-3": {

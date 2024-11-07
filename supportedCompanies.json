@@ -14,6 +14,14 @@
                 "type": "text"
             },
             {
+                "name": "o1-preview",
+                "type": "text"
+            },
+            {
+                "name": "o1-mini",
+                "type": "text"
+            },
+            {
                 "name": "GPT-4",
                 "type": "text"
             },
@@ -125,6 +133,18 @@
             {
                 "name": "sync-1.5.0",
                 "type": "video"
+            }
+        ]
+    },
+    {
+        "company": "HuggingFace",
+        "authentication": [
+            "APIKey"
+        ],
+        "models": [
+            {
+                "name": "Qwen",
+                "type": "text"
             }
         ]
     }

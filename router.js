@@ -67,7 +67,6 @@ function matchRoute(method, path) {
     return null;
 }
 
-
 async function delegate(req, res) {
     const parsedUrl = parseUrl(req.url, true);
     const matchedRoute = matchRoute(req.method, parsedUrl.pathname);
