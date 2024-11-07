@@ -135,6 +135,18 @@
                 "type": "video"
             }
         ]
+    },
+    {
+        "company": "HuggingFace",
+        "authentication": [
+            "APIKey"
+        ],
+        "models": [
+            {
+                "name": "Qwen",
+                "type": "text"
+            }
+        ]
     }
 ]
 
