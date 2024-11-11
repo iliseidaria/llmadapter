@@ -14,7 +14,7 @@ async function getTextResponse(req, res) {
     }
     try {
         const modelResponse = await Text.getTextResponse(APIKey,modelName, prompt, modelConfig, messagesQueue);
-        Request.sendResponse(res, 200, "application/json", {
+        return Request.sendResponse(res, 200, "application/json", {
             data: modelResponse
         });
     } catch (error) {
@@ -30,10 +30,9 @@ async function getTextStreamingResponse(req, res) {
     let { sessionId } = req.body;
 
     if (!modelName || !prompt || !APIKey) {
-        Request.sendResponse(res, 400, "application/json", {
+        return Request.sendResponse(res, 400, "application/json", {
             message: "Bad Request. APIKey, modelName, and prompt are required"
         });
-        return;
     }
 
     if (!sessionId) {

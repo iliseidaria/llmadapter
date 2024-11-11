@@ -6,7 +6,8 @@ async function getTextResponse(APIKey, modelName, prompt, modelConfig, messagesQ
         return await modelInstance.getTextConversationResponse(prompt, messagesQueue,modelConfig);
     } else {
         const modelInstance = await LLMFactory.createLLM(modelName, APIKey,modelConfig);
-        return await modelInstance.getTextResponse(prompt,modelConfig);
+        //return await modelInstance.getTextResponse(prompt,modelConfig);
+        return await modelInstance.getStreamingTextResponse(prompt,modelConfig);
     }
 }
 
