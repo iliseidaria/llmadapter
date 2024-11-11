@@ -15,15 +15,12 @@ async function lipsync(request, response) {
         let audioPath = `${audioId}.mp3`;
         request.body.videoUrl = `${config.S3_URL}/${devBucket}/${videoPath}`;
         request.body.audioUrl = `${config.S3_URL}/${devBucket}/${audioPath}`;
-        const videoURL = await Video.lipsync(APIKey, modelName, request.body);
-        Request.sendResponse(response, 200, "application/json", {
-            data: videoURL
-        });
+        await Video.lipsync(APIKey, modelName, request.body);
+        Request.sendResponse(response, 200, "application/json", {});
     } catch (error) {
         Request.sendResponse(response, error.statusCode || 500, "application/json", {
             message: error.message
         });
-
     }
 }
 export {lipsync}
