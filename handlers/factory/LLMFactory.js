@@ -1,6 +1,6 @@
-import  OpenAITextMixin from '../mixins/OpenAI/Text.js';
-import  OpenAIImageMixin from '../mixins/OpenAI/Image.js';
-import  QwenTextMixin from '../mixins/Qwen/Text.js';
+import OpenAITextMixin from '../mixins/OpenAI/Text.js';
+import OpenAIImageMixin from '../mixins/OpenAI/Image.js';
+import QwenTextMixin from '../mixins/Qwen/Text.js';
 
 // import * as AnthropicMixin from '../mixins/Anthropic/anthropic.js';
 // import * as GoogleMixin from '../mixins/Google/google.js';
@@ -43,39 +43,42 @@ const LLMs = {
     },
 };
 
-class LLMFactory {
-    static async createLLM(LLMName, APIKey, config = {}, ...additionalMixins) {
-        const LLMClass = LLMs[LLMName];
-        if (!LLMClass) {
-            throw this._createError(`No LLM found with the name: ${LLMName}`, 404);
-        }
-        const defaultMixins = LLMClass.defaultMixins || [];
-        const allMixins = Array.from(new Set([...defaultMixins, ...additionalMixins]));
 
-        if (typeof config !== 'object') {
-            throw this._createError(`Config must be an object`, 400);
-        }
+async function createLLM(LLMName, APIKey, config = {}, ...additionalMixins) {
+    const LLMClass = LLMs[LLMName];
+    if (!LLMClass) {
+        throw _createError(`No LLM found with the name: ${LLMName}`, 404);
+    }
+    const defaultMixins = LLMClass.defaultMixins || [];
+    const allMixins = Array.from(new Set([...defaultMixins, ...additionalMixins]));
 
-        config = Object.keys(config).length ? config : (LLMClass.instance.defaultConfig || {});
-
-        const instance = new LLMClass.instance(APIKey, config);
-        instance.throttler = LLMClass.throttler;
-        for (const mixin of allMixins) {
-            const mixinFunction = Mixins[mixin];
-            if (!mixinFunction) {
-                throw this._createError(`No mixin found with the name: ${mixin}`, 404);
-            }
-            await mixinFunction(instance);
-        }
-
-        return instance;
+    if (typeof config !== 'object') {
+        throw _createError(`Config must be an object`, 400);
     }
 
-    static _createError(message, statusCode) {
-        const error = new Error(message);
-        error.statusCode = statusCode;
-        throw error;
+    config = Object.keys(config).length ? config : (LLMClass.instance.defaultConfig || {});
+
+    const instance = new LLMClass.instance(APIKey, config);
+    instance.throttler = LLMClass.throttler;
+    for (const mixin of allMixins) {
+        const mixinFunction = Mixins[mixin];
+        if (!mixinFunction) {
+            throw _createError(`No mixin found with the name: ${mixin}`, 404);
+        }
+        await mixinFunction(instance);
     }
+
+    return instance;
 }
 
-export default LLMFactory;
+function _createError(message, statusCode) {
+    const error = new Error(message);
+    error.statusCode = statusCode;
+    throw error;
+}
+
+
+export default {
+    createLLM,
+    _createError,
+};
