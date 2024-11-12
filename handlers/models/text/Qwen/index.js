@@ -16,7 +16,6 @@ class Qwen extends ITextLLM {
 
 
     //static modelName = "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF" // decent response but concatenates the prompt within the response
-    //static modelName="meta-llama/Meta-Llama-3.1-8B-Instruct" //requires pro subscription
     //static modelName="mistralai/Mistral-Nemo-Instruct-2407" //requires pro
     //static modelName="meta-llama/Llama-3.1-8B-Instruct"; //requires pro subscription
 
@@ -27,6 +26,8 @@ class Qwen extends ITextLLM {
   //  static modelName = `microsoft/Phi-3-mini-4k-instruct` //Small yet powerful text generation model.
    static modelName = `meta-llama/Meta-Llama-3.1-8B-Instruct` //decent works well
    // static modelName = `google/gemma-2-2b-it` // doesnt work
+    // static modelName =meta-llama/Llama-2-7b-chat-hf
+
     constructor(APIKey, config) {
         super(APIKey, config);
     }
@@ -37,3 +38,4 @@ class Qwen extends ITextLLM {
 }
 
 export default Qwen;
+
