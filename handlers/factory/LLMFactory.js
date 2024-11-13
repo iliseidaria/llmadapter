@@ -1,45 +1,71 @@
-import OpenAITextMixin from '../mixins/OpenAI/Text.js';
-import OpenAIImageMixin from '../mixins/OpenAI/Image.js';
-import QwenTextMixin from '../mixins/Qwen/Text.js';
+import OpenAITextMixin from '../mixins/OpenAI/text.js';
+import OpenAIImageMixin from '../mixins/OpenAI/image.js';
+import HuggingFaceText from '../mixins/HuggingFace/text.js';
+import SynclabsLipsync from '../mixins/Synclabs/lipsync.js';
+import PlayHTAudio from '../mixins/PlayHT/audio.js';
+import MidjourneyImage from '../mixins/Midjourney/image.js';
 
-// import * as AnthropicMixin from '../mixins/Anthropic/anthropic.js';
-// import * as GoogleMixin from '../mixins/Google/google.js';
+const Throttler = (await import('../../utils/Throttler.js')).default;
+
 const Mixins = {
-    openAI_Text: OpenAITextMixin,
-    openAI_Image: OpenAIImageMixin,
-    // anthropic: AnthropicMixin,
-    // google: GoogleMixin,
-    qwen_Text: QwenTextMixin
+    OpenAI_Text: OpenAITextMixin,
+    OpenAI_Image: OpenAIImageMixin,
+    HuggingFace_Text: HuggingFaceText,
+    Synclabs_Lipsync: SynclabsLipsync,
+    PlayHT_Audio: PlayHTAudio,
+    MidJourney_Image: MidjourneyImage,
 };
+const ModelTypes = {
+    TextLLM: (await import('../interfaces/TextLLM.js')).default,
+    ImageLLM: (await import('../interfaces/ImageLLM.js')).default,
+    AudioLLM: (await import('../interfaces/AudioLLM.js')).default,
+    VideoLLM: (await import('../interfaces/VideoLLM.js')).default,
+}
 
 const LLMs = {
-    "PlayHT2.0": (await import('../models/audio/PlayHT/index.js')),
-    "sync-1.6.0": (await import('../models/video/SYNC160/index.js')),
-    "Qwen": {
-        instance: (await import('../models/text/Qwen/index.js')).default,
-        defaultMixins: ['qwen_Text'],
+    "PlayHT2.0": {
+        instance: ModelTypes.AudioLLM,
+        defaultMixins: ['PlayHT_Audio'],
+        throttling: {
+            limit: 10,
+            interval: 60000
+        }
     },
-
+    "sync-1.7.1": {
+        instance: ModelTypes.VideoLLM,
+        defaultMixins: ['Synclabs_Lipsync'],
+    },
+    "Qwen/Qwen2.5-72B-Instruct": {
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['HuggingFace_Text'],
+    },
+    "meta-llama/Meta-Llama-3.1-8B-Instruct": {
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['HuggingFace_Text'],
+    },
     "GPT-4o": {
-        instance: (await import('../models/text/GPT-4o/index.js')).default,
-        defaultMixins: ['openAI_Text'],
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['OpenAI_Text'],
     },
     "o1-preview": {
-        instance: (await import('../models/text/o1-preview/index.js')).default,
-        defaultMixins: ['openAI_Text'],
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['OpenAI_Text'],
     },
     "o1-mini": {
-        instance: (await import('../models/text/o1-mini/index.js')).default,
-        defaultMixins: ['openAI_Text'],
-    },
-    "DALL-E-3": {
-        instance: (await import('../models/image/DALL-E-3/index.js')).default,
-    },
-    "DALL-E-2": {
-        instance: (await import('../models/image/DALL-E-2/index.js')).default,
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['OpenAI_Text'],
     },
     "MidJourney": {
-        instance: (await import('../models/image/MidJourney/index.js')).default,
+        instance: ModelTypes.ImageLLM,
+        defaultMixins: ['MidJourney_Image'],
+    },
+    "dall-e-3": {
+        instance: ModelTypes.ImageLLM,
+        defaultMixins: ['OpenAI_Image']
+    },
+    "dall-e-2": {
+        instance: ModelTypes.ImageLLM,
+        defaultMixins: ['OpenAI_Image']
     },
 };
 
@@ -58,8 +84,10 @@ async function createLLM(LLMName, APIKey, config = {}, ...additionalMixins) {
 
     config = Object.keys(config).length ? config : (LLMClass.instance.defaultConfig || {});
 
-    const instance = new LLMClass.instance(APIKey, config);
-    instance.throttler = LLMClass.throttler;
+    const instance = new LLMClass.instance(APIKey, config, LLMName);
+    if(LLMClass.throttling) {
+        instance.throttler = new Throttler(LLMClass.throttling.limit, LLMClass.throttling.interval);
+    }
     for (const mixin of allMixins) {
         const mixinFunction = Mixins[mixin];
         if (!mixinFunction) {
@@ -80,5 +108,4 @@ function _createError(message, statusCode) {
 
 export default {
     createLLM,
-    _createError,
 };

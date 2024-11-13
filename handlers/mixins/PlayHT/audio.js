@@ -1,38 +1,24 @@
-import IAudioLLM from "../../../interfaces/IAudioLLM.js";
 import fetch from "node-fetch";
-import Throttler from "../../../../utils/Throttler.js";
-import fsPromises from "fs/promises";
-import path from "path";
-import {fileURLToPath} from 'url';
 
-class PlayHT extends IAudioLLM {
-    constructor(APIKey, config) {
-        super(APIKey, config);
-    }
-
-    getModelName() {
-        return "PlayHT";
-    }
-
-    createErrorMessage(status, jsonResponse) {
+export default async function (modelInstance) {
+    modelInstance.createErrorMessage = (status, jsonResponse) => {
         let errorMessage = jsonResponse["error_message"];
         if (status === 401) {
             errorMessage = "API KEY is missing or invalid";
         }
         return `${jsonResponse["error_id"]}: ${errorMessage}`;
     }
-
-    async generateAudio(configs) {
+    modelInstance.generateAudio = async (configs) => {
         const options = {
             method: "POST",
             headers: {
                 accept: "text/event-stream",
                 "content-type": "application/json",
-                AUTHORIZATION: this.APIKey,
+                AUTHORIZATION:  modelInstance.APIKey,
                 "X-USER-ID": configs.userId,
             },
             body: JSON.stringify({
-                voice_engine: 'PlayHT2.0',
+                voice_engine:  modelInstance.getModelName(),
                 text: configs.prompt,
                 voice: configs.voice,
                 output_format: "mp3",
@@ -57,22 +43,13 @@ class PlayHT extends IAudioLLM {
         if (!response.ok) {
             let errorData = {
                 status: response.status,
-                message: this.createErrorMessage(response.status, await response.json())
+                message:  modelInstance.createErrorMessage(response.status, await response.json())
             }
             throw new Error(JSON.stringify(errorData));
         }
         return await response.arrayBuffer();
     }
-    async getMockAudio(){
-        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-        await sleep(3000);
-        const __filename = fileURLToPath(import.meta.url);
-        const __dirname = path.dirname(__filename);
-        let audioPath = path.join(__dirname, 'audio.mp3');
-        let audio = await fsPromises.readFile(audioPath);
-        return audio;
-    }
-    async textToSpeech(configs) {
+    modelInstance.textToSpeech = async (configs) => {
         if (configs.prompt > 2000) {
             let errorData = {
                 status: 400,
@@ -81,19 +58,17 @@ class PlayHT extends IAudioLLM {
             throw new Error(JSON.stringify(errorData));
         }
         const generateAudioTask = async () => {
-            //return await this.getMockAudio(configs);
-            return await this.generateAudio(configs);
+            return await  modelInstance.generateAudio(configs);
         }
-        return await this.throttler.addTask(generateAudioTask);
+        return await  modelInstance.throttler.addTask(generateAudioTask);
     }
-
-    async listVoices(configs) {
+    modelInstance.listVoices = async (configs) => {
         const url = 'https://api.play.ht/api/v2/voices';
         const options = {
             method: 'GET',
             headers: {
                 accept: 'application/json',
-                AUTHORIZATION: this.APIKey,
+                AUTHORIZATION:  modelInstance.APIKey,
                 'X-USER-ID': configs.userId
             }
         };
@@ -110,14 +85,13 @@ class PlayHT extends IAudioLLM {
         if (!response.ok) {
             throw new Error(JSON.stringify({
                 status: response.status,
-                message: this.createErrorMessage(response.status, voices)
+                message:  modelInstance.createErrorMessage(response.status, voices)
             }));
         }
-        voices = voices.filter(voice => voice.voice_engine === 'PlayHT2.0');
+        voices = voices.filter(voice => voice.voice_engine ===  modelInstance.getModelName());
         return voices;
     }
-
-    async listEmotions() {
+    modelInstance.listEmotions = () => {
         return [
             'female_happy',
             'female_sad',
@@ -130,8 +104,7 @@ class PlayHT extends IAudioLLM {
             'male_angry',
             'male_fearful',
             'male_disgust',
-            'male_surprised'];
+            'male_surprised'
+        ];
     }
 }
-const playHTThrottler = new Throttler(10, 60000);
-export {PlayHT as instance, playHTThrottler as throttler};

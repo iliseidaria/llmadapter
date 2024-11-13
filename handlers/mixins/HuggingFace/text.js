@@ -25,20 +25,6 @@ function buildTextGenerationConfig(modelInstance, prompt, configs) {
     };
 }
 
-async function ensureJSONResponseFormat(llmResponse, llmRequestFallback = false) {
-    const trimmedResponse = llmResponse.trim();
-
-    try {
-        const parsedResponse = JSON.parse(trimmedResponse);
-        return JSON.stringify(parsedResponse);
-    } catch (error) {
-        if (llmRequestFallback) {
-            return llmResponse;
-        }
-        return llmResponse;
-    }
-}
-
 export default async function (modelInstance) {
     const hf = new HfInference(modelInstance.APIKey);
 

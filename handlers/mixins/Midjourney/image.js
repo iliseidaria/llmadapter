@@ -1,16 +1,8 @@
-import IImageLLM from "../../../interfaces/IImageLLM.js";
+import {generateId, generateRefWithSignature, webhookURL} from "../../../controllers/Util.js";
 import fetch from "node-fetch";
-import {generateRefWithSignature, webhookURL, generateId} from "../../../../controllers/Util.js";
-class MidJourney extends IImageLLM {
-    constructor(APIKey, config) {
-        super(APIKey, config);
-        this.result = "";
-    }
 
-    getModelName() {
-    }
-
-    async generateImage(prompt, configs) {
+export default async function (modelInstance) {
+    modelInstance.generateImage = async (prompt, configs) => {
         const url = "https://api.mymidjourney.ai/api/v1/midjourney/imagine";
         const refObj = generateRefWithSignature(configs.webhookSecret);
         refObj.objectId = `${configs.spaceId}_${generateId(8)}`;
@@ -19,7 +11,7 @@ class MidJourney extends IImageLLM {
             method: "POST",
             headers: {
                 "content-type": "application/json",
-                Authorization: `Bearer ${this.APIKey}`,
+                Authorization: `Bearer ${modelInstance.APIKey}`,
             },
             body: JSON.stringify({
                 prompt: prompt,
@@ -42,7 +34,7 @@ class MidJourney extends IImageLLM {
             buttons: []
         }
     };
-    async editImage(configs) {
+    modelInstance.editImage = async (configs) => {
         const url = "https://api.mymidjourney.ai/api/v1/midjourney/button";
         const refObj = generateRefWithSignature(configs.webhookSecret);
         refObj.objectId = `${configs.spaceId}_${generateId(8)}`;
@@ -51,7 +43,7 @@ class MidJourney extends IImageLLM {
             method: "POST",
             headers: {
                 "content-type": "application/json",
-                Authorization: `Bearer ${this.APIKey}`,
+                Authorization: `Bearer ${modelInstance.APIKey}`,
             },
             body: JSON.stringify({
                 messageId: configs.messageId,
@@ -74,5 +66,3 @@ class MidJourney extends IImageLLM {
         }
     }
 }
-
-export default MidJourney;
