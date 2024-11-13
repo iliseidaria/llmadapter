@@ -9,6 +9,7 @@ class Server {
     constructor() {
         this.middlewares = [];
         this.server = http.createServer(this.handleRequest.bind(this));
+        this.server.setTimeout(0);
     }
 
     use(middleware) {
