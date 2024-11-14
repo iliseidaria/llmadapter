@@ -15,6 +15,7 @@ const Mixins = {
     PlayHT_Audio: PlayHTAudio,
     MidJourney_Image: MidjourneyImage,
 };
+
 const ModelTypes = {
     TextLLM: (await import('../interfaces/TextLLM.js')).default,
     ImageLLM: (await import('../interfaces/ImageLLM.js')).default,
@@ -35,6 +36,10 @@ const LLMs = {
         instance: ModelTypes.VideoLLM,
         defaultMixins: ['Synclabs_Lipsync'],
     },
+    "sync-1.6.0":{
+        instance: ModelTypes.VideoLLM,
+        defaultMixins: ['Synclabs_Lipsync'],
+    },
     "Qwen/Qwen2.5-72B-Instruct": {
         instance: ModelTypes.TextLLM,
         defaultMixins: ['HuggingFace_Text'],
@@ -42,6 +47,66 @@ const LLMs = {
     "meta-llama/Meta-Llama-3.1-8B-Instruct": {
         instance: ModelTypes.TextLLM,
         defaultMixins: ['HuggingFace_Text'],
+    },
+    "meta-llama/Meta-llama-3-8B": {
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['HuggingFace_Text']
+    },
+    "mistralai/Mistral-8x7B-Instruct-v0.1": {
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['HuggingFace_Text']
+    },
+    "meta-llama/Llama-2-7b-chat-hf": {
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['HuggingFace_Text']
+    },
+    "meta-llama/Meta-llama-2-70B-chat-hf": {
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['HuggingFace_Text']
+    },
+    "mistralai/Mistral-7B-v0.1": {
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['HuggingFace_Text']
+    },
+    "google/gemma-7b": {
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['HuggingFace_Text']
+    },
+    "bigscience/bloom": {
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['HuggingFace_Text']
+    },
+    "meta-llama/Meta-llama-3-8B-Instruct":{
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['HuggingFace_Text']
+    },
+    "mistralai/Mistral-7B-Instruct-v0.2": {
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['HuggingFace_Text']
+    },
+    "meta-llama/Llama-3.1-8B-Instruct": {
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['HuggingFace_Text']
+    },
+    "xai-org/grok-1": {
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['HuggingFace_Text']
+    },
+    "databricks/dolly-v2-12b": {
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['HuggingFace_Text']
+    },
+    "mistralai/Mistral-Nemo-Instruct-2407": {
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['HuggingFace_Text']
+    },
+    "EleutherAI/gpt-j-6b": {
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['HuggingFace_Text']
+    },
+    "openai-community/gpt2": {
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['HuggingFace_Text']
     },
     "GPT-4o": {
         instance: ModelTypes.TextLLM,
