@@ -39,6 +39,9 @@ async function listLlms(request, response) {
                 models[companyModel.type].push(companyModel.name);
             }
         }
+        Object.keys(models).forEach(key => {
+            models[key].sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }));
+        });
         return Request.sendResponse(response, 200, 'application/json', {
             data: models
         });
