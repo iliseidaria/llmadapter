@@ -4,6 +4,7 @@ import * as Text from './controllers/Text.js';
 import * as Audio from './controllers/Audio.js';
 import * as Image from './controllers/Image.js';
 import * as Video from './controllers/Video.js';
+import * as Chat from './controllers/Chat.js';
 import * as Util from './controllers/Util.js';
 import * as Storage from './controllers/Storage.js';
 
@@ -20,6 +21,8 @@ const routes = {
     'POST': {
         '/apis/v1/text/generate': Text.getTextResponse,
         '/apis/v1/text/streaming/generate': Text.getTextStreamingResponse,
+        '/apis/v1/chat/generate': Chat.getChatResponse,
+        //'/apis/v1/chat/streaming/generate': Chat.getChatStreamingResponse,
         '/apis/v1/image/generate': Image.generateImage,
         '/apis/v1/image/edit': Image.editImage,
         '/apis/v1/image/variants': Image.generateImageVariants,

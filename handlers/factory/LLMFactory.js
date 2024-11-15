@@ -4,6 +4,7 @@ import HuggingFaceText from '../mixins/HuggingFace/text.js';
 import SynclabsLipsync from '../mixins/Synclabs/lipsync.js';
 import PlayHTAudio from '../mixins/PlayHT/audio.js';
 import MidjourneyImage from '../mixins/Midjourney/image.js';
+import HuggingFaceChat from '../mixins/HuggingFace/chat.js';
 
 const Throttler = (await import('../../utils/Throttler.js')).default;
 
@@ -11,6 +12,7 @@ const Mixins = {
     OpenAI_Text: OpenAITextMixin,
     OpenAI_Image: OpenAIImageMixin,
     HuggingFace_Text: HuggingFaceText,
+    HuggingFace_Chat: HuggingFaceChat,
     Synclabs_Lipsync: SynclabsLipsync,
     PlayHT_Audio: PlayHTAudio,
     MidJourney_Image: MidjourneyImage,
@@ -21,6 +23,7 @@ const ModelTypes = {
     ImageLLM: (await import('../interfaces/ImageLLM.js')).default,
     AudioLLM: (await import('../interfaces/AudioLLM.js')).default,
     VideoLLM: (await import('../interfaces/VideoLLM.js')).default,
+    ChatLLM: (await import('../interfaces/ChatLLM.js')).default,
 }
 
 const LLMs = {
@@ -36,7 +39,7 @@ const LLMs = {
         instance: ModelTypes.VideoLLM,
         defaultMixins: ['Synclabs_Lipsync'],
     },
-    "sync-1.6.0":{
+    "sync-1.6.0": {
         instance: ModelTypes.VideoLLM,
         defaultMixins: ['Synclabs_Lipsync'],
     },
@@ -57,12 +60,12 @@ const LLMs = {
         defaultMixins: ['HuggingFace_Text']
     },
     "meta-llama/Llama-2-7b-chat-hf": {
-        instance: ModelTypes.TextLLM,
-        defaultMixins: ['HuggingFace_Text']
+        instance: ModelTypes.ChatLLM,
+        defaultMixins: ['HuggingFace_Chat']
     },
     "meta-llama/Meta-llama-2-70B-chat-hf": {
-        instance: ModelTypes.TextLLM,
-        defaultMixins: ['HuggingFace_Text']
+        instance: ModelTypes.ChatLLM,
+        defaultMixins: ['HuggingFace_Chat']
     },
     "mistralai/Mistral-7B-v0.1": {
         instance: ModelTypes.TextLLM,
@@ -76,7 +79,7 @@ const LLMs = {
         instance: ModelTypes.TextLLM,
         defaultMixins: ['HuggingFace_Text']
     },
-    "meta-llama/Meta-llama-3-8B-Instruct":{
+    "meta-llama/Meta-llama-3-8B-Instruct": {
         instance: ModelTypes.TextLLM,
         defaultMixins: ['HuggingFace_Text']
     },
@@ -150,7 +153,7 @@ async function createLLM(LLMName, APIKey, config = {}, ...additionalMixins) {
     config = Object.keys(config).length ? config : (LLMClass.instance.defaultConfig || {});
 
     const instance = new LLMClass.instance(APIKey, config, LLMName);
-    if(LLMClass.throttling) {
+    if (LLMClass.throttling) {
         instance.throttler = new Throttler(LLMClass.throttling.limit, LLMClass.throttling.interval);
     }
     for (const mixin of allMixins) {
