@@ -1,5 +1,19 @@
-import { HfInference } from "@huggingface/inference";
+import {HfInference} from "@huggingface/inference";
 
+
+function buildTextGenerationConfig(modelInstance, prompt, configs) {
+    const {temperature, maxTokens, top_p, stop} = configs;
+    return {
+        inputs: prompt,
+        model: modelInstance.getModelName(),
+        parameters: {
+            ...(temperature !== undefined ? {temperature} : {}),
+            ...(maxTokens !== undefined ? {max_new_tokens: maxTokens} : {max_new_tokens: 1000}),
+            ...(top_p !== undefined ? {top_p} : {}),
+            ...(stop !== undefined ? {stop} : {}),
+        },
+    };
+}
 function buildChatCompletionConfig(modelInstance, prompt, configs) {
     const { temperature, maxTokens, top_p, stop } = configs;
     return {
@@ -12,21 +26,9 @@ function buildChatCompletionConfig(modelInstance, prompt, configs) {
     };
 }
 
-function buildTextGenerationConfig(modelInstance, prompt, configs) {
-    const { temperature, maxTokens, top_p, stop } = configs;
-    return {
-        inputs: prompt,
-        parameters: {
-            ...(temperature !== undefined ? { temperature } : {}),
-            ...(maxTokens !== undefined ? { max_new_tokens: maxTokens } : { max_new_tokens: 1000 }),
-            ...(top_p !== undefined ? { top_p } : {}),
-            ...(stop !== undefined ? { stop } : {}),
-        },
-    };
-}
-
 export default async function (modelInstance) {
     const hf = new HfInference(modelInstance.APIKey);
+
 
     async function executeStandardCompletion(modelInstance, prompt, configs) {
         const chatConfig = buildChatCompletionConfig(modelInstance, prompt, configs);
@@ -55,19 +57,17 @@ export default async function (modelInstance) {
         }
     }
 
-    modelInstance.getTextResponse = function (prompt, configs = {}) {
-        return executeStandardCompletion(modelInstance, prompt, configs);
-    };
-
-    async function executeStreamingCompletion(modelInstance, prompt, configs) {
+    async function executeStreamingCompletion(modelInstance, prompt,streamEmitter, configs) {
         const chatConfig = buildChatCompletionConfig(modelInstance, prompt, configs);
         let fullText = "";
         try {
             for await (const chunk of hf.chatCompletionStream(chatConfig)) {
                 if (chunk.choices && chunk.choices[0].delta && chunk.choices[0].delta.content) {
                     fullText += chunk.choices[0].delta.content;
+                    streamEmitter.emit('data', chunk.choices[0].delta.content);
                 }
             }
+            streamEmitter.emit('end', { fullMessage: fullText });
             return fullText;
         } catch (error) {
             const textGenConfig = buildTextGenerationConfig(modelInstance, prompt, configs);
@@ -84,7 +84,16 @@ export default async function (modelInstance) {
         }
     }
 
-    modelInstance.getStreamingTextResponse = function (prompt, configs = {}) {
-        return executeStreamingCompletion(modelInstance, prompt, configs);
+    modelInstance.getTextResponse = function (prompt, configs = {}) {
+        return executeStandardCompletion(modelInstance, prompt, configs);
     };
+    modelInstance.getTextStreamingResponse = function (prompt, streamEmitter, configs = {}) {
+        return executeStreamingCompletion(modelInstance, prompt, streamEmitter, configs);
+    };
+
+    modelInstance.getTextConversationResponse = async function (prompt, chat, configs = {}) {
+        let promptMessages = chat.map(message => JSON.stringify(message)).join('\n') + prompt;
+        return await executeStandardCompletion(modelInstance, promptMessages, configs);
+    }
+
 }

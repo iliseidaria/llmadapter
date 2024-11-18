@@ -105,17 +105,15 @@ export default async function (modelInstance) {
         prompt = [{role: 'user', content: prompt}];
         return executeStandardCompletion(OpenAI, modelInstance, prompt, configs);
     };
-
-    modelInstance.getTextConversationResponse = function (prompt, messagesQueue, configs = {}) {
-        const combinedPrompt = messagesQueue.concat({role: 'user', content: prompt});
-        return executeStandardCompletion(OpenAI, modelInstance, combinedPrompt, configs);
-    };
-
     modelInstance.getTextStreamingResponse = function (prompt, streamEmitter, configs = {}) {
         prompt = [{role: 'user', content: prompt}];
         return executeStreamingCompletion(OpenAI, modelInstance, prompt, streamEmitter, configs);
     };
 
+    modelInstance.getTextConversationResponse = function (prompt, messagesQueue, configs = {}) {
+        const combinedPrompt = messagesQueue.concat({role: 'user', content: prompt});
+        return executeStandardCompletion(OpenAI, modelInstance, combinedPrompt, configs);
+    };
     modelInstance.getTextConversationStreamingResponse = function (prompt, messagesQueue, streamEmitter, configs = {}) {
         const combinedPrompt = messagesQueue.concat({role: 'user', content: prompt});
         return executeStreamingCompletion(OpenAI, modelInstance, combinedPrompt, streamEmitter, configs);
