@@ -12,6 +12,7 @@ const routes = {
     'GET': {
         '/apis/v1/authRequirements': Util.getAuthRequirements,
         '/apis/v1/llms': Util.listLlms,
+        '/apis/v1/llms/defaults': Util.getDefaultLlms,
         '/apis/v1/images': Storage.getImage,
         '/apis/v1/audios': Storage.getAudio,
         '/apis/v1/videos': Storage.getVideo,

@@ -40,7 +40,7 @@ async function listLlms(request, response) {
             }
         }
         Object.keys(models).forEach(key => {
-            models[key].sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }));
+            models[key].sort((a, b) => a.localeCompare(b, 'en', {sensitivity: 'base'}));
         });
         return Request.sendResponse(response, 200, 'application/json', {
             data: models
@@ -52,11 +52,26 @@ async function listLlms(request, response) {
     }
 }
 
+async function getDefaultLlms(request, response) {
+    try {
+        const defaultLLMS = JSON.parse(await fsPromises.readFile('defaultModels.json', 'utf-8'));
+        return Request.sendResponse(response, 200, 'application/json', {
+            data: defaultLLMS
+        });
+    } catch (error) {
+        return Request.sendResponse(response, 500, 'application/json', {
+            message: e.message
+        });
+    }
+}
+
+
 const webhookURL = "http://demo.assistos.net:8080/webhook/data";
 export {
     getAuthRequirements,
     generateRefWithSignature,
     webhookURL,
     generateId,
-    listLlms
+    listLlms,
+    getDefaultLlms
 }
