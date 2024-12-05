@@ -107,7 +107,15 @@ const LLMs = {
         instance: ModelTypes.TextLLM,
         defaultMixins: ['HuggingFace_Text']
     },
+    "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['HuggingFace_Text']
+    },
     "openai-community/gpt2": {
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['HuggingFace_Text']
+    },
+    "Qwen/QwQ-32B-Preview":{
         instance: ModelTypes.TextLLM,
         defaultMixins: ['HuggingFace_Text']
     },
