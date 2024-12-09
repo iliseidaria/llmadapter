@@ -154,6 +154,9 @@ export default async function (modelInstance) {
         let promptMessages = chat.map(message => JSON.stringify(message)).join('\n') + prompt;
         return await executeStandardCompletion(modelInstance, promptMessages, configs);
     }
+    modelInstance.getTextStreamingResponse = function (prompt, streamEmitter, configs = {}) {
+        return executeStreamingCompletion(modelInstance, prompt, streamEmitter, configs);
+    };
 
 }
 
