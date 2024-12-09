@@ -1,3 +1,6 @@
+import {encoding_for_model} from "@dqbd/tiktoken";
+
+
 async function createOpenAIInstance(APIKey) {
     if (!APIKey) {
         const error = new Error("API key not provided");
@@ -9,7 +12,16 @@ async function createOpenAIInstance(APIKey) {
 }
 
 function buildLLMRequestConfig(modelInstance, prompt, configs) {
-    const {variants, temperature, maxTokens, response_format, top_p, frequency_penalty, presence_penalty, stop} = configs;
+    const {
+        variants,
+        temperature,
+        maxTokens,
+        response_format,
+        top_p,
+        frequency_penalty,
+        presence_penalty,
+        stop
+    } = configs;
     return {
         model: modelInstance.getModelName(),
         messages: prompt,
@@ -64,7 +76,13 @@ async function ensureJSONResponseFormat(llmResponseArray, modelInstance, llmRequ
     }));
 }
 
+function calculatePromptTokens(prompt, modelName) {
+    const encoding = encoding_for_model(modelName);
+    return encoding.encode(prompt).length;
+}
+
 export default async function (modelInstance) {
+
     const OpenAI = await createOpenAIInstance(modelInstance.APIKey);
 
     async function executeStandardCompletion(OpenAI, modelInstance, prompt, configs) {
@@ -79,7 +97,7 @@ export default async function (modelInstance) {
                 metadata: response
             }
         }
-        return { messages, metadata: response };
+        return {messages, metadata: response};
     }
 
     async function executeStreamingCompletion(OpenAI, modelInstance, prompt, streamEmitter, configs) {
@@ -95,7 +113,7 @@ export default async function (modelInstance) {
             const messages = response.choices.map(choice => choice.message.content);
             delete response.choices;
             const trimmedMessages = messages.map(trimJSONMarkers);
-            streamEmitter.emit('end', { fullMessage: trimmedMessages, metadata: response });
+            streamEmitter.emit('end', {fullMessage: trimmedMessages, metadata: response});
         })();
 
         return streamEmitter;
@@ -105,6 +123,53 @@ export default async function (modelInstance) {
         prompt = [{role: 'user', content: prompt}];
         return executeStandardCompletion(OpenAI, modelInstance, prompt, configs);
     };
+
+    modelInstance.getTextResponseAdvanced = async function (promptObject) {
+        let prompt = Object.values(promptObject).join("\n\n");
+
+        const {maxOutput, contentWindow} = modelInstance.config;
+
+        const modelName= modelInstance.getModelName();
+
+        const fullPromptTokenCount = calculatePromptTokens(prompt, modelName);
+        const contextPromptTokenCount = calculatePromptTokens(promptObject.promptContext, modelName);
+        const instructionsPromptTokenCount = calculatePromptTokens(promptObject.promptInstructions, modelName);
+
+        if(contextPromptTokenCount >  contentWindow){
+            throw new Error(`Prompt context exceeds content window of the model:"${modelName}". Model Content Window:${contentWindow}, Prompt Context Tokens Used:${contextPromptTokenCount}. No summarization strategy can be applied.`);
+        }
+        if(instructionsPromptTokenCount >  contentWindow){
+            throw new Error(`Prompt instructions exceeds content window of the model:"${modelName}". Model Content Window:${contentWindow}, Prompt Instructions Tokens Used:${instructionsPromptTokenCount}. No summarization strategy can be applied.`);
+        }
+
+        let remainingTokens = contentWindow - fullPromptTokenCount;
+
+        /* if the prompt is > contentWindow - maxTokens */
+
+        if (remainingTokens < maxOutput) {
+
+            const contextSummarizationPrompt = [{
+                role: "user", content:
+                    `
+                ** Role:**
+                 
+                - You will be given a context that you will need to summarize
+                - The summary should be as semantically similar as possible as the original.
+                
+                ** Context**: "${promptObject.promptContext}"
+                `
+            }]
+
+            const maxTokensCp = modelInstance.config.maxTokens;
+            modelInstance.config.maxTokens = Math.min(contentWindow - instructionsPromptTokenCount - maxOutput,maxOutput);
+            const contextSummarizationResponse = await executeStandardCompletion(OpenAI, modelInstance, contextSummarizationPrompt, modelInstance.config);
+            promptObject.promptContext = contextSummarizationResponse.messages[0];
+            modelInstance.config.maxTokens = maxTokensCp;
+        }
+        prompt = Object.values(promptObject).join("\n\n");
+        return executeStandardCompletion(modelInstance, prompt, modelInstance.config);
+    }
+
     modelInstance.getTextStreamingResponse = function (prompt, streamEmitter, configs = {}) {
         prompt = [{role: 'user', content: prompt}];
         return executeStreamingCompletion(OpenAI, modelInstance, prompt, streamEmitter, configs);
@@ -119,3 +184,5 @@ export default async function (modelInstance) {
         return executeStreamingCompletion(OpenAI, modelInstance, combinedPrompt, streamEmitter, configs);
     };
 }
+
+

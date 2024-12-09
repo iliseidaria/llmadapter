@@ -6,23 +6,33 @@
         ],
         "models": [
             {
-                "name": "GPT-3.5-Turbo",
+                "name": "gpt-3.5-turbo",
+                "contentWindow": 16385,
+                "maxOutput": 4096,
                 "type": "text"
             },
             {
-                "name": "GPT-4o",
+                "name": "gpt-4o",
+                "contentWindow": 128000,
+                "maxOutput": 16384,
                 "type": "text"
             },
             {
                 "name": "o1-preview",
+                "contentWindow": 128000,
+                "maxOutput": 32768,
                 "type": "text"
             },
             {
                 "name": "o1-mini",
+                "contentWindow": 128000,
+                "maxOutput": 65536,
                 "type": "text"
             },
             {
-                "name": "GPT-4",
+                "name": "gpt-4",
+                "contentWindow": 8192,
+                "maxOutput": 8192,
                 "type": "text"
             },
             {
@@ -156,10 +166,13 @@
             },
             {
                 "name": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+                "contentWindow": 128000,
                 "type": "text"
             },
             {
                 "name": "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF",
+                "contentWindow": 128000,
+                "maxOutput": 4096,
                 "type": "text"
             },
             {

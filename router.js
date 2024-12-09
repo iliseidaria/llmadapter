@@ -21,6 +21,7 @@ const routes = {
     },
     'POST': {
         '/apis/v1/text/generate': Text.getTextResponse,
+        '/apis/v1/text/generate/advanced': Text.getTextResponseAdvanced,
         '/apis/v1/text/streaming/generate': Text.getTextStreamingResponse,
         '/apis/v1/chat/generate': Chat.getChatResponse,
         '/apis/v1/chat/streaming/generate': Chat.getChatStreamingResponse,

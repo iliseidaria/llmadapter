@@ -5,6 +5,32 @@ import * as Text from '../handlers/Text.js';
 
 const cache = {};
 
+async function getTextResponseAdvanced(req,res){
+    const {modelName, promptObject,modelConfig,APIKey} = req.body;
+    if(!modelName){
+        return Request.sendResponse(res, 400, "application/json", {
+            message: "Bad Request. Model name is required"
+        });
+    }
+    if(!promptObject){
+        return Request.sendResponse(res, 400, "application/json", {
+            message: "Bad Request. Prompt object is required"
+        });
+    }if(!APIKey){
+        return Request.sendResponse(res, 400, "application/json", {
+            message: "Bad Request. API Key is required"
+        });
+    }
+    try{
+        const modelResponse = await Text.getTextResponseAdvanced(APIKey,modelName,promptObject,modelConfig);
+        return Request.sendResponse(res, 200, "application/json", {
+            data: modelResponse
+        });
+    }catch(error){
+        return Request.sendResponse(res, error.statusCode || 500, "application/json",error.message);
+    }
+}
+
 async function getTextResponse(req, res) {
     const { modelName, prompt, messagesQueue, modelConfig, APIKey } = req.body;
     if (!modelName || !prompt) {
@@ -88,5 +114,6 @@ async function getTextStreamingResponse(req, res) {
 
 export {
     getTextResponse,
-    getTextStreamingResponse
+    getTextStreamingResponse,
+    getTextResponseAdvanced
 };
