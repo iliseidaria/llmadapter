@@ -135,10 +135,10 @@ export default async function (modelInstance) {
         const contextPromptTokenCount = calculatePromptTokens(promptObject.promptContext, modelName);
         const instructionsPromptTokenCount = calculatePromptTokens(promptObject.promptInstructions, modelName);
 
-        if(contextPromptTokenCount >  contentWindow){
+        if (contextPromptTokenCount > contentWindow) {
             throw new Error(`Prompt context exceeds content window of the model:"${modelName}". Model Content Window:${contentWindow}, Prompt Context Tokens Used:${contextPromptTokenCount}. No summarization strategy can be applied.`);
         }
-        if(instructionsPromptTokenCount >  contentWindow){
+        if (instructionsPromptTokenCount > contentWindow) {
             throw new Error(`Prompt instructions exceeds content window of the model:"${modelName}". Model Content Window:${contentWindow}, Prompt Instructions Tokens Used:${instructionsPromptTokenCount}. No summarization strategy can be applied.`);
         }
 
@@ -147,7 +147,6 @@ export default async function (modelInstance) {
         /* if the prompt is > contentWindow - maxTokens */
 
         if (remainingTokens < maxOutput) {
-
             const contextSummarizationPrompt = [{
                 role: "user", content:
                     `

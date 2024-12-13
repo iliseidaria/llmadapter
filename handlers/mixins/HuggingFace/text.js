@@ -1,5 +1,4 @@
 import {HfInference} from "@huggingface/inference";
-import {AutoTokenizer} from '@huggingface/transformers';
 
 function buildTextGenerationConfig(modelInstance, prompt, configs) {
     const {temperature, maxTokens, top_p, stop} = configs;
@@ -85,12 +84,6 @@ export default async function (modelInstance) {
         }
     }
 
-    modelInstance.getTextResponseAdvanced = function (promptObject, modelConfig) {
-        const promptTokens = calculatePromptTokens(modelInstance, promptObject);
-        return executeStandardCompletion(modelInstance, promptObject, modelConfig);
-
-    }
-
     modelInstance.getTextResponse = function (prompt, configs = {}) {
         return executeStandardCompletion(modelInstance, prompt, configs);
     };
@@ -102,15 +95,17 @@ export default async function (modelInstance) {
         const modelName = modelInstance.getModelName();
 
         const results = await Promise.allSettled([
-            calculatePromptTokens(prompt, modelName, modelInstance.APIKey),
-            calculatePromptTokens(promptObject.promptContext, modelName, modelInstance.APIKey),
-            calculatePromptTokens(promptObject.promptInstructions, modelName, modelInstance.APIKey)
+            calculatePromptTokens(prompt),
+            calculatePromptTokens(promptObject.promptContext),
+            calculatePromptTokens(promptObject.promptInstructions)
         ]);
 
         const errors = results.filter(result => result.status === "rejected");
 
         if (errors.length > 0) {
-            throw errors[0].reason;
+            const error = new Error(errors[0].reason);
+            error.statusCode = 403;
+            throw error
         }
 
         const [fullPromptTokenCount, contextPromptTokenCount, instructionsPromptTokenCount] = results.map(result => result.value);
@@ -160,7 +155,10 @@ export default async function (modelInstance) {
 
 }
 
-function approximateTokenCountGuaranteedOver(text) {
+function calculatePromptTokens(text) {
+    // This approach attempts a more granular approximation by factoring in punctuation and a smaller chars-per-token ratio.
+    // Despite these efforts, it still relies on heuristic assumptions rather than an actual tokenizer's logic.
+    // Real tokenization depends on model-specific rules, special tokens, whitespace handling, and various language nuances.
     const words = text.trim().split(/\s+/);
     let totalTokens = 0;
     const charsPerToken = 3;
@@ -175,42 +173,4 @@ function approximateTokenCountGuaranteedOver(text) {
 
     return totalTokens;
 }
-
-/*
-async function calculatePromptTokens(prompt, modelName, token) {
-    try {
-        const tokenizer = await AutoTokenizer.from_pretrained(modelName, {
-            token: token
-        });
-        const { input_ids } = await tokenizer(prompt);
-        const tokenCount = input_ids.dims[1];
-        return tokenCount;
-    } catch (error) {
-        console.error("Eroare la încărcarea tokenizer-ului:", error);
-        throw error;
-    }
-}
-*/
-
-/* using header */
-
-async function calculatePromptTokens(prompt, modelName, token) {
-    try {
-        const tokenizer = await AutoTokenizer.from_pretrained(modelName, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        const {input_ids} = await tokenizer(prompt);
-        const tokenCount = input_ids.dims[1];
-        return tokenCount;
-    } catch (error) {
-        throw error;
-    }
-}
-
-
-
-
-
 

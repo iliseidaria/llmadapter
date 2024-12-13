@@ -5,7 +5,7 @@ import * as Text from '../handlers/Text.js';
 
 const cache = {};
 
-async function getTextResponseAdvanced(req,res){
+async function  getTextResponseAdvanced(req,res){
     const {modelName, promptObject,modelConfig,APIKey} = req.body;
     if(!modelName){
         return Request.sendResponse(res, 400, "application/json", {

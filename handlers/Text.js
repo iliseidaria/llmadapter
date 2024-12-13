@@ -13,6 +13,7 @@ async function getTextResponseAdvanced(APIKey, modelName, promptObject, modelCon
     const modelInstance = await LLMFactory.createLLM(modelName, APIKey, modelConfig);
     return await modelInstance.getTextResponseAdvanced(promptObject);
 }
+
 async function getTextStreamingResponse(APIKey, modelName, prompt, modelConfig, messagesQueue, streamEmitter) {
     if (messagesQueue && messagesQueue.length > 0) {
         const modelInstance = await LLMFactory.createLLM(modelName, APIKey, modelConfig);
