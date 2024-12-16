@@ -156,9 +156,6 @@ export default async function (modelInstance) {
 }
 
 function calculatePromptTokens(text) {
-    // This approach attempts a more granular approximation by factoring in punctuation and a smaller chars-per-token ratio.
-    // Despite these efforts, it still relies on heuristic assumptions rather than an actual tokenizer's logic.
-    // Real tokenization depends on model-specific rules, special tokens, whitespace handling, and various language nuances.
     const words = text.trim().split(/\s+/);
     let totalTokens = 0;
     const charsPerToken = 3;
@@ -168,9 +165,12 @@ function calculatePromptTokens(text) {
         const punctuationCount = punctuationMatches.length;
 
         let baseTokens = Math.ceil(w.length / charsPerToken);
-        totalTokens += baseTokens + punctuationCount;
+        let adjustedPunctuation = punctuationCount * 0.5;
+
+        totalTokens += baseTokens + adjustedPunctuation;
     }
 
-    return totalTokens;
+    const bias = Math.ceil(words.length * 0.1);
+    return totalTokens + bias;
 }
 
