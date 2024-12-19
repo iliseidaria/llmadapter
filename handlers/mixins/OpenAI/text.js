@@ -1,5 +1,4 @@
-import {encoding_for_model} from "@dqbd/tiktoken";
-
+import { encoding_for_model } from "@dqbd/tiktoken";
 
 async function createOpenAIInstance(APIKey) {
     if (!APIKey) {
@@ -8,7 +7,7 @@ async function createOpenAIInstance(APIKey) {
         throw error;
     }
     const OpenAILib = (await import('openai')).default;
-    return new OpenAILib({apiKey: APIKey});
+    return new OpenAILib({ apiKey: APIKey });
 }
 
 function buildLLMRequestConfig(modelInstance, prompt, configs) {
@@ -25,14 +24,14 @@ function buildLLMRequestConfig(modelInstance, prompt, configs) {
     return {
         model: modelInstance.getModelName(),
         messages: prompt,
-        ...(variants ? {n: variants} : {}),
-        ...(temperature !== undefined ? {temperature} : {}),
-        ...(maxTokens ? {max_tokens: maxTokens} : {}),
-        ...(top_p !== undefined ? {top_p} : {}),
-        ...(frequency_penalty !== undefined ? {frequency_penalty} : {}),
-        ...(presence_penalty !== undefined ? {presence_penalty} : {}),
-        ...(stop ? {stop} : {}),
-        ...(response_format === "json" ? {response_format: {"type": "json_object"}} : {})
+        ...(variants ? { n: variants } : {}),
+        ...(temperature !== undefined ? { temperature } : {}),
+        ...(maxTokens ? { max_tokens: maxTokens } : {}),
+        ...(top_p !== undefined ? { top_p } : {}),
+        ...(frequency_penalty !== undefined ? { frequency_penalty } : {}),
+        ...(presence_penalty !== undefined ? { presence_penalty } : {}),
+        ...(stop ? { stop } : {}),
+        ...(response_format === "json" ? { response_format: { "type": "json_object" } } : {})
     };
 }
 
@@ -56,24 +55,22 @@ const trimJSONMarkers = (string) => {
     return string;
 }
 
-async function ensureJSONResponseFormat(llmResponseArray, modelInstance, llmRequestFallback = false) {
-    return await Promise.all(llmResponseArray.map(async llmResponse => {
-        let trimmedResponse = trimJSONMarkers(llmResponse.trim());
+async function ensureJSONResponseFormat(llmResponse, modelInstance, llmRequestFallback = false) {
+    let trimmedResponse = trimJSONMarkers(llmResponse.trim());
 
-        try {
-            const parsedResponse = JSON.parse(trimmedResponse);
-            return JSON.stringify(parsedResponse);
-        } catch (error) {
-            if (llmRequestFallback) {
-                const prompt = `Please refactor the following response to be formatted strictly as JSON, without including any markdown or other delimiters. Ensure the JSON is valid and properly structured:\n\n${trimmedResponse}`;
-                const response = await modelInstance.chat.completions.create(
-                    buildLLMRequestConfig(modelInstance, prompt, {response_format: "json"})
-                );
-                return trimJSONMarkers(response.choices[0].message.content);
-            }
-            return llmResponse;
+    try {
+        const parsedResponse = JSON.parse(trimmedResponse);
+        return JSON.stringify(parsedResponse);
+    } catch (error) {
+        if (llmRequestFallback) {
+            const prompt = `Please refactor the following response to be formatted strictly as JSON, without including any markdown or other delimiters. Ensure the JSON is valid and properly structured:\n\n${trimmedResponse}`;
+            const response = await modelInstance.chat.completions.create(
+                buildLLMRequestConfig(modelInstance, prompt, { response_format: "json" })
+            );
+            return trimJSONMarkers(response.choices[0].message.content);
         }
-    }));
+        return llmResponse;
+    }
 }
 
 function calculatePromptTokens(prompt, modelName) {
@@ -88,16 +85,23 @@ export default async function (modelInstance) {
     async function executeStandardCompletion(OpenAI, modelInstance, prompt, configs) {
         const LLMRequestConfig = buildLLMRequestConfig(modelInstance, prompt, configs);
         const response = await OpenAI.chat.completions.create(LLMRequestConfig);
-        const messages = response.choices.map(choice => choice.message.content);
+
+        if (!response.choices || response.choices.length === 0) {
+            throw new Error("Niciun choice găsit în răspunsul API-ului.");
+        }
+
+        const message = response.choices[0].message.content;
+
         delete response.choices;
 
         if (configs.response_format === "json") {
             return {
-                messages: await ensureJSONResponseFormat(messages, OpenAI, true),
+                message: await ensureJSONResponseFormat(message, OpenAI, true),
                 metadata: response
-            }
+            };
         }
-        return {messages, metadata: response};
+
+        return { message, metadata: response };
     }
 
     async function executeStreamingCompletion(OpenAI, modelInstance, prompt, streamEmitter, configs) {
@@ -110,26 +114,26 @@ export default async function (modelInstance) {
                 streamEmitter.emit('data', content);
             }
             const response = await stream.finalChatCompletion();
-            const messages = response.choices.map(choice => choice.message.content);
+            const message = response.choices[0].message.content;
             delete response.choices;
-            const trimmedMessages = messages.map(trimJSONMarkers);
-            streamEmitter.emit('end', {fullMessage: trimmedMessages, metadata: response});
+            const trimmedMessage = trimJSONMarkers(message);
+            streamEmitter.emit('end', { fullMessage: trimmedMessage, metadata: response });
         })();
 
         return streamEmitter;
     }
 
     modelInstance.getTextResponse = function (prompt, configs = {}) {
-        prompt = [{role: 'user', content: prompt}];
+        prompt = [{ role: 'user', content: prompt }];
         return executeStandardCompletion(OpenAI, modelInstance, prompt, configs);
     };
 
     modelInstance.getTextResponseAdvanced = async function (promptObject) {
         let prompt = Object.values(promptObject).join("\n\n");
 
-        const {maxOutput, contentWindow} = modelInstance.config;
+        const { maxOutput, contentWindow } = modelInstance.config;
 
-        const modelName= modelInstance.getModelName();
+        const modelName = modelInstance.getModelName();
 
         const fullPromptTokenCount = calculatePromptTokens(prompt, modelName);
         const contextPromptTokenCount = calculatePromptTokens(promptObject.promptContext, modelName);
@@ -144,7 +148,6 @@ export default async function (modelInstance) {
 
         let remainingTokens = contentWindow - fullPromptTokenCount;
 
-        /* if the prompt is > contentWindow - maxTokens */
 
         if (remainingTokens < maxOutput) {
             const contextSummarizationPrompt = [{
@@ -160,28 +163,27 @@ export default async function (modelInstance) {
             }]
 
             const maxTokensCp = modelInstance.config.maxTokens;
-            modelInstance.config.maxTokens = Math.min(contentWindow - instructionsPromptTokenCount - maxOutput,maxOutput);
+            modelInstance.config.maxTokens = Math.min(contentWindow - instructionsPromptTokenCount - maxOutput, maxOutput);
             const contextSummarizationResponse = await executeStandardCompletion(OpenAI, modelInstance, contextSummarizationPrompt, modelInstance.config);
-            promptObject.promptContext = contextSummarizationResponse.messages[0];
+            promptObject.promptContext = contextSummarizationResponse.message;
             modelInstance.config.maxTokens = maxTokensCp;
         }
         prompt = Object.values(promptObject).join("\n\n");
-        return executeStandardCompletion(modelInstance, prompt, modelInstance.config);
+        return executeStandardCompletion(OpenAI, modelInstance, prompt, modelInstance.config);
     }
 
     modelInstance.getTextStreamingResponse = function (prompt, streamEmitter, configs = {}) {
-        prompt = [{role: 'user', content: prompt}];
+        prompt = [{ role: 'user', content: prompt }];
         return executeStreamingCompletion(OpenAI, modelInstance, prompt, streamEmitter, configs);
     };
 
     modelInstance.getTextConversationResponse = function (prompt, messagesQueue, configs = {}) {
-        const combinedPrompt = messagesQueue.concat({role: 'user', content: prompt});
+        const combinedPrompt = messagesQueue.concat({ role: 'user', content: prompt });
         return executeStandardCompletion(OpenAI, modelInstance, combinedPrompt, configs);
     };
+
     modelInstance.getTextConversationStreamingResponse = function (prompt, messagesQueue, streamEmitter, configs = {}) {
-        const combinedPrompt = messagesQueue.concat({role: 'user', content: prompt});
+        const combinedPrompt = messagesQueue.concat({ role: 'user', content: prompt });
         return executeStreamingCompletion(OpenAI, modelInstance, combinedPrompt, streamEmitter, configs);
     };
 }
-
-
