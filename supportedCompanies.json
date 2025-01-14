@@ -91,10 +91,6 @@
             {
                 "name": "PlayHT2.0",
                 "type": "audio"
-            },
-            {
-                "name": "PlayHT2.0-Turbo",
-                "type": "audio"
             }
         ]
     },
