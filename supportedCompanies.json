@@ -6,6 +6,14 @@
         ],
         "models": [
             {
+                "name": "tts-1",
+                "type": "audio"
+            },
+            {
+                "name": "tts-1-hd",
+                "type": "audio"
+            },
+            {
                 "name": "gpt-3.5-turbo",
                 "contentWindow": 16385,
                 "maxOutput": 4096,
