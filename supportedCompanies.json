@@ -7,41 +7,48 @@
         "models": [
             {
                 "name": "tts-1",
-                "type": "audio"
+                "type": "audio",
+                "languages": "./handlers/mixins/OpenAI/languages.json"
             },
             {
                 "name": "tts-1-hd",
-                "type": "audio"
+                "type": "audio",
+                "languages": "./handlers/mixins/OpenAI/languages.json"
             },
             {
                 "name": "gpt-3.5-turbo",
                 "contentWindow": 16385,
                 "maxOutput": 4096,
-                "type": "text"
+                "type": "text",
+                "languages": "./handlers/mixins/OpenAI/languages.json"
             },
             {
                 "name": "gpt-4o",
                 "contentWindow": 128000,
                 "maxOutput": 16384,
-                "type": "text"
+                "type": "text",
+                "languages": "./handlers/mixins/OpenAI/languages.json"
             },
             {
                 "name": "o1-preview",
                 "contentWindow": 128000,
                 "maxOutput": 32768,
-                "type": "text"
+                "type": "text",
+                "languages": "./handlers/mixins/OpenAI/languages.json"
             },
             {
                 "name": "o1-mini",
                 "contentWindow": 128000,
                 "maxOutput": 65536,
-                "type": "text"
+                "type": "text",
+                "languages": "./handlers/mixins/OpenAI/languages.json"
             },
             {
                 "name": "gpt-4",
                 "contentWindow": 8192,
                 "maxOutput": 8192,
-                "type": "text"
+                "type": "text",
+                "languages": "./handlers/mixins/OpenAI/languages.json"
             },
             {
                 "name": "DALL-E-2",
@@ -162,30 +169,41 @@
         "models": [
             {
                 "name": "Qwen/Qwen2.5-72B-Instruct",
-                "type": "text"
+                "type": "text",
+                "languages": [
+                    "Chinese", "English", "French", "Spanish", "Portuguese", "German", "Italian",
+                    "Russian", "Japanese", "Korean", "Vietnamese", "Thai", "Arabic", "Turkish",
+                    "Indonesian", "Dutch", "Swedish", "Danish", "Finnish", "Norwegian", "Polish",
+                    "Czech", "Hungarian", "Greek", "Hebrew", "Hindi", "Bengali", "Urdu", "Malay"
+                ]
             },
             {
                 "name": "Qwen/QwQ-32B-Preview",
-                "type": "text"
+                "type": "text",
+                "languages":["English"]
             },
             {
                 "name": "meta-llama/Meta-Llama-3.1-8B-Instruct",
                 "contentWindow": 128000,
-                "type": "text"
+                "type": "text",
+                "languages": ["English", "German", "French", "Italian", "Portuguese", "Spanish", "Hindi", "Thai"]
             },
             {
                 "name": "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF",
                 "contentWindow": 128000,
                 "maxOutput": 4096,
-                "type": "text"
+                "type": "text",
+                "languages": ["English"]
             },
             {
                 "name": "meta-llama/Meta-llama-3-8B",
-                "type": "text"
+                "type": "text",
+                "languages": ["English", "German", "French", "Italian", "Portuguese", "Spanish", "Hindi", "Thai"]
             },
             {
                 "name": "mistralai/Mistral-8x7B-Instruct-v0.1",
-                "type": "text"
+                "type": "text",
+                "languages": ["English", "German", "French", "Italian", "Spanish"]
             },
             {
                 "name": "meta-llama/Llama-2-7b-chat-hf",
@@ -197,43 +215,63 @@
             },
             {
                 "name": "mistralai/Mistral-7B-v0.1",
-                "type": "text"
+                "type": "text",
+                "languages": ["English"]
             },
             {
                 "name": "google/gemma-7b",
-                "type": "text"
+                "type": "text",
+                "languages": ["English"]
             },
             {
                 "name": "bigscience/bloom",
-                "type": "text"
+                "type": "text",
+                "languages": [
+                    "Afrikaans", "Albanian", "Arabic", "Armenian", "Assamese", "Azerbaijani",
+                    "Bashkir", "Basque", "Breton", "Bulgarian", "Catalan", "Chinese",
+                    "Chuvash", "Crimean Tatar", "Czech", "Dutch", "English", "Estonian",
+                    "French", "Galician", "Georgian", "German", "Greek", "Hindi",
+                    "Hungarian", "Icelandic", "Indonesian", "Irish", "Italian", "Japanese",
+                    "Kabyle", "Korean", "Latvian", "Maltese", "Mongolian", "Norwegian",
+                    "Persian", "Polish", "Portuguese", "Romanian", "Russian", "Serbian",
+                    "Slovak", "Slovenian", "Spanish", "Swahili", "Swedish", "Tatar",
+                    "Turkish", "Ukrainian", "Urdu", "Uzbek", "Vietnamese", "Welsh", "Yoruba"
+                ]
             },
             {
                 "name": "meta-llama/Meta-llama-3-8B-Instruct",
-                "type": "text"
+                "type": "text",
+                "languages": ["English", "German", "French", "Italian", "Portuguese", "Spanish", "Hindi", "Thai"]
             },
             {
                 "name": "mistralai/Mistral-7B-Instruct-v0.2",
-                "type": "text"
+                "type": "text",
+                "languages": ["English"]
             },
             {
                 "name": "xai-org/grok-1",
-                "type": "text"
+                "type": "text",
+                "languages": ["English"]
             },
             {
                 "name": "databricks/dolly-v2-12b",
-                "type": "text"
+                "type": "text",
+                "languages": ["English"]
             },
             {
                 "name": "mistralai/Mistral-Nemo-Instruct-2407",
-                "type": "text"
+                "type": "text",
+                "languages": ["English", "French", "German", "Italian", "Spanish", "Portuguese", "Russian", "Chinese", "Japanese"]
             },
             {
                 "name": "EleutherAI/gpt-j-6b",
-                "type": "text"
+                "type": "text",
+                "languages": ["English"]
             },
             {
                 "name": "openai-community/gpt2",
-                "type": "text"
+                "type": "text",
+                "languages": ["English"]
             }
         ]
     }
