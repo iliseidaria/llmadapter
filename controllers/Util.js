@@ -36,6 +36,10 @@ async function listLlms(request, response) {
                 if (!models[companyModel.type]) {
                     models[companyModel.type] = [];
                 }
+                if(companyModel.languages && typeof companyModel.languages === 'string') {
+                    let path = companyModel.languages;
+                    companyModel.languages = JSON.parse(await fsPromises.readFile(path));
+                }
                 models[companyModel.type].push(companyModel.name);
             }
         }
@@ -65,7 +69,34 @@ async function getDefaultLlms(request, response) {
     }
 }
 
-
+async function getModelLanguages(request, response) {
+    try {
+        const modelName = request.body.modelName;
+        const llmConfigs = JSON.parse(await fsPromises.readFile('supportedCompanies.json', 'utf-8'));
+        let languages;
+        for (const company of llmConfigs) {
+            for (const companyModel of company.models) {
+                if (companyModel.name === modelName) {
+                    if(companyModel.languages && typeof companyModel.languages === 'string') {
+                        let path = companyModel.languages;
+                        languages = JSON.parse(await fsPromises.readFile(path));
+                        break;
+                    } else {
+                        languages = companyModel.languages || [];
+                        break;
+                    }
+                }
+            }
+        }
+        return Request.sendResponse(response, 200, 'application/json', {
+            data: languages
+        });
+    } catch (e) {
+        return Request.sendResponse(response, 500, 'application/json', {
+            message: e.message
+        });
+    }
+}
 const webhookURL = "http://demo.assistos.net:8080/webhook/data";
 export {
     getAuthRequirements,
@@ -73,5 +104,6 @@ export {
     webhookURL,
     generateId,
     listLlms,
-    getDefaultLlms
+    getDefaultLlms,
+    getModelLanguages
 }
