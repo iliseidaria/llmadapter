@@ -1,3 +1,7 @@
+import {fileURLToPath} from "url";
+import path from "path";
+import fsPromises from "fs/promises";
+
 async function createOpenAIInstance(APIKey) {
     if (!APIKey) {
         const error = new Error("API key not provided");
@@ -31,7 +35,17 @@ export default async function (modelInstance) {
     modelInstance.textToSpeech = async (configs) => {
         return await modelInstance.throttler.addTask(async ()=>{
             return await modelInstance.generateAudioTask(configs);
+            //return await modelInstance.getMockAudio();
         });
+    }
+    modelInstance.getMockAudio = async () =>{
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+        await sleep(3000);
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = path.dirname(__filename);
+        let audioPath = path.join(__dirname, 'audio.mp3');
+        let audio = await fsPromises.readFile(audioPath);
+        return audio;
     }
     modelInstance.listEmotions = async () => {
         return [];

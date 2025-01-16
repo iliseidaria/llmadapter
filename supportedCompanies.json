@@ -97,7 +97,8 @@
         "models": [
             {
                 "name": "PlayHT2.0",
-                "type": "audio"
+                "type": "audio",
+                "languages": ["English"]
             }
         ]
     },
@@ -203,25 +204,30 @@
             {
                 "name": "mistralai/Mistral-8x7B-Instruct-v0.1",
                 "type": "text",
-                "languages": ["English", "German", "French", "Italian", "Spanish"]
+                "languages": ["English", "German", "French", "Italian", "Spanish"],
+                "experimental": true
             },
             {
                 "name": "meta-llama/Llama-2-7b-chat-hf",
-                "type": "chat"
+                "type": "chat",
+                "experimental": true
             },
             {
                 "name": "meta-llama/Meta-llama-2-70B-chat-hf",
-                "type": "chat"
+                "type": "chat",
+                "experimental": true
             },
             {
                 "name": "mistralai/Mistral-7B-v0.1",
                 "type": "text",
-                "languages": ["English"]
+                "languages": ["English"],
+                "experimental": true
             },
             {
                 "name": "google/gemma-7b",
                 "type": "text",
-                "languages": ["English"]
+                "languages": ["English"],
+                "experimental": true
             },
             {
                 "name": "bigscience/bloom",
@@ -236,42 +242,50 @@
                     "Persian", "Polish", "Portuguese", "Romanian", "Russian", "Serbian",
                     "Slovak", "Slovenian", "Spanish", "Swahili", "Swedish", "Tatar",
                     "Turkish", "Ukrainian", "Urdu", "Uzbek", "Vietnamese", "Welsh", "Yoruba"
-                ]
+                ],
+                "experimental": true
             },
             {
                 "name": "meta-llama/Meta-llama-3-8B-Instruct",
                 "type": "text",
-                "languages": ["English", "German", "French", "Italian", "Portuguese", "Spanish", "Hindi", "Thai"]
+                "languages": ["English", "German", "French", "Italian", "Portuguese", "Spanish", "Hindi", "Thai"],
+                "experimental": true
             },
             {
                 "name": "mistralai/Mistral-7B-Instruct-v0.2",
                 "type": "text",
-                "languages": ["English"]
+                "languages": ["English"],
+                "experimental": true
             },
             {
                 "name": "xai-org/grok-1",
                 "type": "text",
-                "languages": ["English"]
+                "languages": ["English"],
+                "experimental": true
             },
             {
                 "name": "databricks/dolly-v2-12b",
                 "type": "text",
-                "languages": ["English"]
+                "languages": ["English"],
+                "experimental": true
             },
             {
                 "name": "mistralai/Mistral-Nemo-Instruct-2407",
                 "type": "text",
-                "languages": ["English", "French", "German", "Italian", "Spanish", "Portuguese", "Russian", "Chinese", "Japanese"]
+                "languages": ["English", "French", "German", "Italian", "Spanish", "Portuguese", "Russian", "Chinese", "Japanese"],
+                "experimental": true
             },
             {
                 "name": "EleutherAI/gpt-j-6b",
                 "type": "text",
-                "languages": ["English"]
+                "languages": ["English"],
+                "experimental": true
             },
             {
                 "name": "openai-community/gpt2",
                 "type": "text",
-                "languages": ["English"]
+                "languages": ["English"],
+                "experimental": true
             }
         ]
     }

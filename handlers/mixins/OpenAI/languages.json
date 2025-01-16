@@ -1,5 +1,4 @@
-{
-  "languages": [
+[
     "Afrikaans", "Arabic", "Armenian", "Azerbaijani", "Belarusian", "Bosnian", "Bulgarian",
     "Catalan", "Chinese", "Croatian", "Czech", "Danish", "Dutch", "English", "Estonian",
     "Finnish", "French", "Galician", "German", "Greek", "Hebrew", "Hindi", "Hungarian",
@@ -8,5 +7,5 @@
     "Norwegian", "Persian", "Polish", "Portuguese", "Romanian", "Russian", "Serbian",
     "Slovak", "Slovenian", "Spanish", "Swahili", "Swedish", "Tagalog", "Tamil", "Thai",
     "Turkish", "Ukrainian", "Urdu", "Vietnamese", "Welsh"
-  ]
-}
+]
+
