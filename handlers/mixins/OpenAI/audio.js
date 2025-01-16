@@ -38,59 +38,68 @@ export default async function (modelInstance) {
     }
     modelInstance.listVoices = async () => {
         return [{
-            name: "alloy",
-            id: "alloy",
-            gender: "neutral",
-            age: "adult"
+                name: "alloy",
+                id: "alloy",
+                gender: "neutral",
+                age: "adult",
+                sample: "https://cdn.openai.com/API/docs/audio/alloy.wav"
             },
             {
                 name: "ash",
                 id: "ash",
                 gender: "male",
-                age: "adult"
+                age: "adult",
+                sample: "https://cdn.openai.com/API/docs/audio/ash.wav"
             },
             {
                 name: "coral",
                 id: "coral",
                 gender: "female",
-                age: "young adult"
+                age: "young adult",
+                sample: "https://cdn.openai.com/API/docs/audio/coral.wav"
             },
             {
                 name: "echo",
                 id: "echo",
                 gender: "male",
-                age: "young adult"
+                age: "young adult",
+                sample: "https://cdn.openai.com/API/docs/audio/echo.wav"
             },
             {
                 name: "fable",
                 id: "fable",
                 gender: "male",
                 age: "young adult",
-                accent: "british"
+                accent: "british",
+                sample: "https://cdn.openai.com/API/docs/audio/fable.wav"
             },
             {
                 name: "onyx",
                 id: "onyx",
                 gender: "male",
-                age: "adult"
+                age: "adult",
+                sample: "https://cdn.openai.com/API/docs/audio/onyx.wav"
             },
             {
                 name: "nova",
                 id: "nova",
                 gender: "female",
-                age: "adult"
+                age: "adult",
+                sample: "https://cdn.openai.com/API/docs/audio/nova.wav"
             },
             {
                 name: "sage",
                 id: "sage",
                 gender: "female",
-                age: "young adult"
+                age: "young adult",
+                sample: "https://cdn.openai.com/API/docs/audio/sage.wav"
             },
             {
                 name: "shimmer",
                 id: "shimmer",
                 gender: "female",
-                age: "adult"
+                age: "adult",
+                sample: "https://cdn.openai.com/API/docs/audio/shimmer.wav"
             },
         ]
     }
