@@ -1,5 +1,6 @@
 import OpenAITextMixin from '../mixins/OpenAI/text.js';
 import OpenAIImageMixin from '../mixins/OpenAI/image.js';
+import OpenAIAudioMixin from '../mixins/OpenAI/audio.js';
 import HuggingFaceText from '../mixins/HuggingFace/text.js';
 import SynclabsLipsync from '../mixins/Synclabs/lipsync.js';
 import PlayHTAudio from '../mixins/PlayHT/audio.js';
@@ -18,6 +19,7 @@ const Mixins = {
     OpenAI_Text: OpenAITextMixin,
     OpenAI_Image: OpenAIImageMixin,
     OpenRouter_Text: OpenRouterText,
+    OpenAI_Audio: OpenAIAudioMixin,
     HuggingFace_Text: HuggingFaceText,
     HuggingFace_Chat: HuggingFaceChat,
     Synclabs_Lipsync: SynclabsLipsync,
@@ -51,6 +53,15 @@ const LLMs = {
         instance: ModelTypes.AudioLLM,
         defaultMixins: ['PlayHT_Audio'],
         config:llmConfigs["PlayHT2.0"],
+        throttling: {
+            limit: 10,
+            interval: 60000
+        }
+    },
+    "PlayHT2.0-Turbo": {
+        instance: ModelTypes.AudioLLM,
+        defaultMixins: ['PlayHT_Audio'],
+        config:llmConfigs["PlayHT2.0-Turbo"],
         throttling: {
             limit: 10,
             interval: 60000
@@ -142,6 +153,24 @@ const LLMs = {
         config:llmConfigs["dall-e-2"],
     },
 
+    "tts-1":{
+        instance: ModelTypes.AudioLLM,
+        defaultMixins: ['OpenAI_Audio'],
+        config:llmConfigs["tts-1"],
+        throttling: {
+            limit: 500,
+            interval: 60000
+        }
+    },
+    "tts-1-hd":{
+        instance: ModelTypes.AudioLLM,
+        defaultMixins: ['OpenAI_Audio'],
+        config:llmConfigs["tts-1-hd"],
+        throttling: {
+            limit: 500,
+            interval: 60000
+        }
+    }
 };
 
 

@@ -6,34 +6,49 @@
         ],
         "models": [
             {
+                "name": "tts-1",
+                "type": "audio",
+                "languages": "./handlers/mixins/OpenAI/languages.json"
+            },
+            {
+                "name": "tts-1-hd",
+                "type": "audio",
+                "languages": "./handlers/mixins/OpenAI/languages.json"
+            },
+            {
                 "name": "gpt-3.5-turbo",
                 "contentWindow": 16385,
                 "maxOutput": 4096,
-                "type": "text"
+                "type": "text",
+                "languages": "./handlers/mixins/OpenAI/languages.json"
             },
             {
                 "name": "gpt-4o",
                 "contentWindow": 128000,
                 "maxOutput": 16384,
-                "type": "text"
+                "type": "text",
+                "languages": "./handlers/mixins/OpenAI/languages.json"
             },
             {
                 "name": "o1-preview",
                 "contentWindow": 128000,
                 "maxOutput": 32768,
-                "type": "text"
+                "type": "text",
+                "languages": "./handlers/mixins/OpenAI/languages.json"
             },
             {
                 "name": "o1-mini",
                 "contentWindow": 128000,
                 "maxOutput": 65536,
-                "type": "text"
+                "type": "text",
+                "languages": "./handlers/mixins/OpenAI/languages.json"
             },
             {
                 "name": "gpt-4",
                 "contentWindow": 8192,
                 "maxOutput": 8192,
-                "type": "text"
+                "type": "text",
+                "languages": "./handlers/mixins/OpenAI/languages.json"
             },
             {
                 "name": "DALL-E-2",
@@ -82,11 +97,8 @@
         "models": [
             {
                 "name": "PlayHT2.0",
-                "type": "audio"
-            },
-            {
-                "name": "PlayHT2.0-Turbo",
-                "type": "audio"
+                "type": "audio",
+                "languages": ["English"]
             }
         ]
     },
@@ -158,22 +170,31 @@
         "models": [
             {
                 "name": "Qwen/Qwen2.5-72B-Instruct",
-                "type": "text"
+                "type": "text",
+                "languages": [
+                    "Chinese", "English", "French", "Spanish", "Portuguese", "German", "Italian",
+                    "Russian", "Japanese", "Korean", "Vietnamese", "Thai", "Arabic", "Turkish",
+                    "Indonesian", "Dutch", "Swedish", "Danish", "Finnish", "Norwegian", "Polish",
+                    "Czech", "Hungarian", "Greek", "Hebrew", "Hindi", "Bengali", "Urdu", "Malay"
+                ]
             },
             {
                 "name": "Qwen/QwQ-32B-Preview",
-                "type": "text"
+                "type": "text",
+                "languages":["English"]
             },
             {
                 "name": "meta-llama/Meta-Llama-3.1-8B-Instruct",
                 "contentWindow": 128000,
-                "type": "text"
+                "type": "text",
+                "languages": ["English", "German", "French", "Italian", "Portuguese", "Spanish", "Hindi", "Thai"]
             },
             {
                 "name": "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF",
                 "contentWindow": 128000,
                 "maxOutput": 4096,
-                "type": "text"
+                "type": "text",
+                "languages": ["English"]
             },
             {
                 "name": "meta-llama/Llama-2-7b-chat-hf",

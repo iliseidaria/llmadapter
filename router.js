@@ -32,6 +32,7 @@ const routes = {
         '/apis/v1/audio/listVoices': Audio.listVoices,
         '/apis/v1/audio/listEmotions': Audio.listEmotions,
         '/apis/v1/video/lipsync': Video.lipsync,
+        '/apis/v1/llms/languages': Util.getModelLanguages,
     },
     'PUT': {
         '/apis/v1/images': Storage.putImage,
