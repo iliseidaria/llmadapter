@@ -5,6 +5,7 @@ import SynclabsLipsync from '../mixins/Synclabs/lipsync.js';
 import PlayHTAudio from '../mixins/PlayHT/audio.js';
 import MidjourneyImage from '../mixins/Midjourney/image.js';
 import HuggingFaceChat from '../mixins/HuggingFace/chat.js';
+import OpenRouterText from '../mixins/OpenRouter/text.js';
 import fsPromises from "fs/promises";
 import { fileURLToPath } from 'url';
 
@@ -16,6 +17,7 @@ const Throttler = (await import('../../utils/Throttler.js')).default;
 const Mixins = {
     OpenAI_Text: OpenAITextMixin,
     OpenAI_Image: OpenAIImageMixin,
+    OpenRouter_Text: OpenRouterText,
     HuggingFace_Text: HuggingFaceText,
     HuggingFace_Chat: HuggingFaceChat,
     Synclabs_Lipsync: SynclabsLipsync,
@@ -74,16 +76,6 @@ const LLMs = {
         defaultMixins: ['HuggingFace_Text'],
         config:llmConfigs["meta-llama/Meta-Llama-3.1-8B-Instruct"],
     },
-    "meta-llama/Meta-llama-3-8B": {
-        instance: ModelTypes.TextLLM,
-        defaultMixins: ['HuggingFace_Text'],
-        config:llmConfigs["meta-llama/Meta-llama-3-8B"],
-    },
-    "mistralai/Mistral-8x7B-Instruct-v0.1": {
-        instance: ModelTypes.TextLLM,
-        defaultMixins: ['HuggingFace_Text'],
-        config:llmConfigs["mistralai/Mistral-8x7B-Instruct-v0.1"],
-    },
     "meta-llama/Llama-2-7b-chat-hf": {
         instance: ModelTypes.ChatLLM,
         defaultMixins: ['HuggingFace_Chat'],
@@ -94,65 +86,10 @@ const LLMs = {
         defaultMixins: ['HuggingFace_Chat'],
         config:llmConfigs["meta-llama/Meta-llama-2-70B-chat-hf"],
     },
-    "mistralai/Mistral-7B-v0.1": {
-        instance: ModelTypes.TextLLM,
-        defaultMixins: ['HuggingFace_Text'],
-        config:llmConfigs["mistralai/Mistral-7B-v0.1"],
-    },
-    "google/gemma-7b": {
-        instance: ModelTypes.TextLLM,
-        defaultMixins: ['HuggingFace_Text'],
-        config:llmConfigs["google/gemma-7b"],
-    },
-    "bigscience/bloom": {
-        instance: ModelTypes.TextLLM,
-        defaultMixins: ['HuggingFace_Text'],
-        config:llmConfigs["bigscience/bloom"],
-    },
-    "meta-llama/Meta-llama-3-8B-Instruct": {
-        instance: ModelTypes.TextLLM,
-        defaultMixins: ['HuggingFace_Text'],
-        config:llmConfigs["meta-llama/Meta-llama-3-8B-Instruct"],
-    },
-    "mistralai/Mistral-7B-Instruct-v0.2": {
-        instance: ModelTypes.TextLLM,
-        defaultMixins: ['HuggingFace_Text'],
-        config:llmConfigs["mistralai/Mistral-7B-Instruct-v0.2"],
-    },
-    "meta-llama/Llama-3.1-8B-Instruct": {
-        instance: ModelTypes.TextLLM,
-        defaultMixins: ['HuggingFace_Text'],
-        config:llmConfigs["meta-llama/Llama-3.1-8B-Instruct"],
-    },
-    "xai-org/grok-1": {
-        instance: ModelTypes.TextLLM,
-        defaultMixins: ['HuggingFace_Text'],
-        config:llmConfigs["xai-org/grok-1"],
-    },
-    "databricks/dolly-v2-12b": {
-        instance: ModelTypes.TextLLM,
-        defaultMixins: ['HuggingFace_Text'],
-        config:llmConfigs["databricks/dolly-v2-12b"],
-    },
-    "mistralai/Mistral-Nemo-Instruct-2407": {
-        instance: ModelTypes.TextLLM,
-        defaultMixins: ['HuggingFace_Text'],
-        config:llmConfigs["mistralai/Mistral-Nemo-Instruct-2407"],
-    },
-    "EleutherAI/gpt-j-6b": {
-        instance: ModelTypes.TextLLM,
-        defaultMixins: ['HuggingFace_Text'],
-        config:llmConfigs["EleutherAI/gpt-j-6b"],
-    },
     "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
         instance: ModelTypes.TextLLM,
         defaultMixins: ['HuggingFace_Text'],
         config:llmConfigs["nvidia/Llama-3.1-Nemotron-70B-Instruct-HF"],
-    },
-    "openai-community/gpt2": {
-        instance: ModelTypes.TextLLM,
-        defaultMixins: ['HuggingFace_Text'],
-        config:llmConfigs["openai-community/gpt2"],
     },
     "Qwen/QwQ-32B-Preview":{
         instance: ModelTypes.TextLLM,
@@ -163,7 +100,21 @@ const LLMs = {
         instance: ModelTypes.TextLLM,
         defaultMixins: ['OpenAI_Text'],
         config:llmConfigs["gpt-4o"],
-
+    },
+    "deepseek/deepseek-r1":{
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['OpenRouter_Text'],
+        config:llmConfigs["deepseek/deepseek-r1"]
+    },
+    "anthropic/claude-3.5-sonnet:beta": {
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['OpenRouter_Text'],
+        config:llmConfigs["anthropic/claude-3.5-sonnet:beta"]
+    },
+    "perplexity/llama-3.1-sonar-huge-128k-online": {
+        instance: ModelTypes.TextLLM,
+        defaultMixins: ['OpenRouter_Text'],
+        config:llmConfigs["perplexity/llama-3.1-sonar-huge-128k-online"]
     },
     "o1-preview": {
         instance: ModelTypes.TextLLM,
@@ -190,6 +141,7 @@ const LLMs = {
         defaultMixins: ['OpenAI_Image'],
         config:llmConfigs["dall-e-2"],
     },
+
 };
 
 

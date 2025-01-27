@@ -176,59 +176,31 @@
                 "type": "text"
             },
             {
-                "name": "meta-llama/Meta-llama-3-8B",
-                "type": "text"
-            },
-            {
-                "name": "mistralai/Mistral-8x7B-Instruct-v0.1",
-                "type": "text"
-            },
-            {
                 "name": "meta-llama/Llama-2-7b-chat-hf",
                 "type": "chat"
             },
             {
                 "name": "meta-llama/Meta-llama-2-70B-chat-hf",
                 "type": "chat"
-            },
+            }
+        ]
+    },
+    {
+        "company": "OpenRouter",
+        "authentication": [
+            "APIKey"
+        ],
+        "models": [
             {
-                "name": "mistralai/Mistral-7B-v0.1",
+                "name": "deepseek/deepseek-r1",
                 "type": "text"
             },
             {
-                "name": "google/gemma-7b",
+                "name": "anthropic/claude-3.5-sonnet:beta",
                 "type": "text"
             },
             {
-                "name": "bigscience/bloom",
-                "type": "text"
-            },
-            {
-                "name": "meta-llama/Meta-llama-3-8B-Instruct",
-                "type": "text"
-            },
-            {
-                "name": "mistralai/Mistral-7B-Instruct-v0.2",
-                "type": "text"
-            },
-            {
-                "name": "xai-org/grok-1",
-                "type": "text"
-            },
-            {
-                "name": "databricks/dolly-v2-12b",
-                "type": "text"
-            },
-            {
-                "name": "mistralai/Mistral-Nemo-Instruct-2407",
-                "type": "text"
-            },
-            {
-                "name": "EleutherAI/gpt-j-6b",
-                "type": "text"
-            },
-            {
-                "name": "openai-community/gpt2",
+                "name": "perplexity/llama-3.1-sonar-huge-128k-online",
                 "type": "text"
             }
         ]
