@@ -13,11 +13,9 @@ const routes = {
         '/apis/v1/authRequirements': Util.getAuthRequirements,
         '/apis/v1/llms': Util.listLlms,
         '/apis/v1/llms/defaults': Util.getDefaultLlms,
-        '/apis/v1/images': Storage.getImage,
-        '/apis/v1/audios': Storage.getAudio,
-        '/apis/v1/videos': Storage.getVideo,
         '/apis/v1/uploads': Storage.getUploadURL,
         '/apis/v1/downloads': Storage.getDownloadURL,
+        '/apis/v1/:fileType': Storage.getFile,
     },
     'POST': {
         '/apis/v1/text/generate': Text.getTextResponse,
@@ -35,19 +33,13 @@ const routes = {
         '/apis/v1/llms/languages': Util.getModelLanguages,
     },
     'PUT': {
-        '/apis/v1/images': Storage.putImage,
-        '/apis/v1/audios': Storage.putAudio,
-        '/apis/v1/videos': Storage.putVideo,
+        '/apis/v1/storage': Storage.putFile,
     },
     'DELETE': {
-        '/apis/v1/images': Storage.deleteImage,
-        '/apis/v1/audios': Storage.deleteAudio,
-        '/apis/v1/videos': Storage.deleteVideo,
+        '/apis/v1/storage': Storage.deleteFile,
     },
     'HEAD': {
-        '/apis/v1/images': Storage.headImage,
-        '/apis/v1/audios': Storage.headAudio,
-        '/apis/v1/videos': Storage.headVideo,
+        '/apis/v1/storage': Storage.headFile,
     }
 };
 
