@@ -225,6 +225,13 @@
                 "type": "text"
             }
         ]
+    },
+    {
+        "company": "GitHub",
+        "authentication": [
+            "APIKey"
+        ],
+        "models": []
     }
 ]
 
