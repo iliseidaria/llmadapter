@@ -16,7 +16,7 @@ async function getDownloadURL(req, res) {
             });
         }
         type = decodeURIComponent(type);
-        if(type){
+        if(type && type !== "undefined"){
             let extension = fileExtensions[type];
             fileId += extension;
         }
@@ -60,7 +60,7 @@ async function getUploadURL(req, res) {
 async function getFile(req, res) {
     let {fileId, type} = Request.extractQueryParams(req);
     type = decodeURIComponent(type);
-    if(type){
+    if(type && type !== "undefined"){
         let extension = fileExtensions[type];
         fileId += extension;
     }
@@ -128,7 +128,7 @@ async function deleteFile(req, res) {
     try {
         let {fileId, type} = Request.extractQueryParams(req);
         type = decodeURIComponent(type);
-        if(type){
+        if(type && type !== "undefined"){
             let extension = fileExtensions[type];
             fileId += extension;
         }
@@ -147,7 +147,7 @@ async function headFile(req, res) {
     try {
         let {fileId, type} = Request.extractQueryParams(req);
         type = decodeURIComponent(type);
-        if(type){
+        if(type && type !== "undefined"){
             let extension = fileExtensions[type];
             fileId += extension;
         }
