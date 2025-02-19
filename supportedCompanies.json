@@ -223,6 +223,18 @@
             {
                 "name": "perplexity/llama-3.1-sonar-huge-128k-online",
                 "type": "text"
+            },
+            {
+                "name": "google/gemini-2.0-pro-exp-02-05:free",
+                "type": "text"
+            },
+            {
+                "name": "google/gemini-2.0-flash-exp:free",
+                "type": "text"
+            },
+            {
+                "name": "google/gemini-2.0-flash-thinking-exp-1219:free",
+                "type": "text"
             }
         ]
     },
