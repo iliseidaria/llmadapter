@@ -235,6 +235,26 @@
             {
                 "name": "google/gemini-2.0-flash-thinking-exp-1219:free",
                 "type": "text"
+            },
+            {
+                "name": "google/gemini-2.0-flash-001",
+                "type": "text"
+            },
+            {
+                "name": "openai/o3-mini-high",
+                "type": "text"
+            },
+            {
+                "name": "openai/o3-mini",
+                "type": "text"
+            },
+            {
+                "name": "mistralai/mistral-nemo",
+                "type": "text"
+            },
+            {
+                "name": "nousresearch/hermes-3-llama-3.1-405b",
+                "type": "text"
             }
         ]
     },
